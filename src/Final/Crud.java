@@ -1,0 +1,73 @@
+package Final;
+
+import Basededatos.Crear;
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.*;
+
+public class Crud extends JFrame implements ActionListener {
+
+    private final Container contenedor;
+    private final JButton Bcrear, Bcancelar;
+    private final JLabel Lnombre, Lmensaje;
+    private final JTextField TFnombre;
+    private final JPanel Pcampos;
+
+    public Crud() {
+        super("Registro de usuarios");
+        Icon save = new ImageIcon("img/save.PNG");
+        Bcrear = new JButton("Crear", save);
+        Bcrear.addActionListener(this);
+
+        Icon delete = new ImageIcon("img/delete.PNG");
+        Bcancelar = new JButton("Cancelar", delete);
+        Bcancelar.addActionListener(this);
+
+        Lnombre = new JLabel("Nombre");
+        TFnombre = new JTextField("", 10);
+        Lmensaje = new JLabel("Crear jugadores");
+        Pcampos = new JPanel(new GridLayout(2, 2));
+        Pcampos.add(Lnombre);
+        Pcampos.add(TFnombre);
+        Pcampos.add(Bcrear);
+        Pcampos.add(Bcancelar);
+        contenedor = getContentPane();
+        contenedor.setLayout(new FlowLayout());
+        contenedor.add(Lmensaje);
+        contenedor.add(Pcampos);
+
+        setSize(300, 225);
+        setVisible(true);
+        setResizable(false);
+    }
+    @Override
+    public void actionPerformed(ActionEvent evento){
+        if (evento.getSource()== Bcrear){
+            if((TFnombre.getText()).length()==0){
+                JOptionPane.showMessageDialog(null, "Por favor ingresa un Nombre en el campo de texto", "Error al crear", 0);
+            }else{
+                Crear crear = new Crear(TFnombre.getText());
+                if(crear.GetConsult()==null){
+                    JOptionPane.showMessageDialog(null, "error inesperado, por favor intenta de nuevo", "Error al crear", 0);
+                }else{
+                    JOptionPane.showMessageDialog(null, "Exito al crear jugador", "Exito", 1);
+                    this.dispose();
+                }                
+            }
+        }else{
+            //devolver a la otra ventana
+            String[] args=null;
+            menu m = new menu();
+            m.main(args);
+            this.dispose();
+        }
+    }
+    public static void main(String[] args) {
+        Crud aplicacion = new Crud();
+        aplicacion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    }
+}
