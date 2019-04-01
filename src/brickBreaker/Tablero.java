@@ -65,6 +65,7 @@ public class Tablero extends JPanel implements Runnable, Constantes {
             try {
                 juego.sleep(3);
             } catch (InterruptedException ex) {
+                ex.printStackTrace();
             }
         }
     }
@@ -91,6 +92,13 @@ public class Tablero extends JPanel implements Runnable, Constantes {
             bola.setDirY(bola.getDirY() * -1);
             inmunidad = false;
         } else if(bola.getY()>510){
+            if (puntaje > 0) {
+                if (puntaje == 50) {
+                    puntaje -= 50;
+                } else {
+                    puntaje -= 100;
+                }
+            }
             reStart();
         }
     }
@@ -122,22 +130,58 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 5; j++) {
                 if (grilla[i][j].golpeArriba(bola.getX() + 10, bola.getY() + 10)) {
+                    JOptionPane.showMessageDialog(null, "Golpe Arriba");
+                    grilla[i][j].color--;
+                    bola.setDirY(bola.getDirY() * -1);
+                    inmunidad = false;
+                }
+                if (grilla[i][j].golpeAbajo(bola.getX() + 10, bola.getY() + 10)) {
+                    JOptionPane.showMessageDialog(null, "Golpe Abajo");
+                    grilla[i][j].color--;
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
                     break;
-                } else if (grilla[i][j].golpeAbajo(bola.getX() + 10, bola.getY() + 10)) {
+                }
+                if (grilla[i][j].golpeDerecha(bola.getX() + 10, bola.getY() + 10)) {
+                    JOptionPane.showMessageDialog(null, "Golpe Derecha");
+                    grilla[i][j].color--;
+                    bola.setDirX(bola.getDirX() * -1);
+                    inmunidad = false;
+                }
+                if (grilla[i][j].golpeIzquierda(bola.getX() + 10, bola.getY() + 10)) {
+                    JOptionPane.showMessageDialog(null, "Golpe Izquierda");
+                    grilla[i][j].color--;
+                    bola.setDirX(bola.getDirX() * -1);
+                    inmunidad = false;
+                    break;
+                }
+                if (grilla[i][j].golpeEsquinaAD(bola.getX() + 10, bola.getY() + 10)) {
+                    JOptionPane.showMessageDialog(null, "Golpe esquina AD");
+                    grilla[i][j].color--;
+                    bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
-                    break;
-                } else if (grilla[i][j].golpeDerecha(bola.getX() + 10, bola.getY() + 10)) {
+                }
+                if (grilla[i][j].golpeEsquinaAI(bola.getX() + 10, bola.getY() + 10)) {
+                    JOptionPane.showMessageDialog(null, "Golpe esquina AI");
+                    grilla[i][j].color--;
                     bola.setDirX(bola.getDirX() * -1);
-                    
+                    bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
-                    break;
-                } else if (grilla[i][j].golpeIzquierda(bola.getX() + 10, bola.getY() + 10)) {
+                }
+                if (grilla[i][j].golpeEsquinaArD(bola.getX() + 10, bola.getY() + 10)) {
+                    JOptionPane.showMessageDialog(null, "Golpe esquina ArD");
+                    grilla[i][j].color--;
                     bola.setDirX(bola.getDirX() * -1);
+                    bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
-                    break;
+                }
+                if (grilla[i][j].golpeEsquinaArI(bola.getX() + 10, bola.getY() + 10)) {
+                    JOptionPane.showMessageDialog(null, "Golpe esquina ArI");
+                    grilla[i][j].color--;
+                    bola.setDirX(bola.getDirX() * -1);
+                    bola.setDirY(bola.getDirY() * -1);
+                    inmunidad = false;
                 }
             }
         }
