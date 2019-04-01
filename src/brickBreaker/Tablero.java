@@ -91,7 +91,7 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         if (bola.getY() == 0) {
             bola.setDirY(bola.getDirY() * -1);
             inmunidad = false;
-        } else if(bola.getY()>510){
+        } else if (bola.getY() > 510) {
             if (puntaje > 0) {
                 if (puntaje == 50) {
                     puntaje -= 50;
@@ -193,7 +193,7 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         }
 
     }
-    
+
     private class Escucha extends KeyAdapter implements MouseMotionListener {
 
         @Override
@@ -210,7 +210,9 @@ public class Tablero extends JPanel implements Runnable, Constantes {
 
         @Override
         public void mouseMoved(MouseEvent e) {
-            barra.setX(e.getX() - 50);
+            if (pausa.get() == false) {
+                barra.setX(e.getX() - 50);
+            }
         }
     }
 }
