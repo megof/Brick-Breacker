@@ -13,8 +13,6 @@ public class Grilla extends Juego implements Constantes {
     public Grilla(int x, int y, int width, int height, int color) {
         super ( x, y, width, height );
         this.color = color;
-        
-        info = new Informacion(VENTANA_INFO_WIDTH, VENTANA_INFO_HEIGHT);
     }
 
     public void paint(Graphics g) {
@@ -46,40 +44,43 @@ public class Grilla extends Juego implements Constantes {
             destruido=true;
             Tablero.puntaje += 50;
             color = -1;
-            info.repaint();
         }
     }
     
     public boolean golpeArriba(int bolaX, int bolaY) {
-        if (((bolaX + 9 >= x) && (bolaX - 9 <= x + width)) && (bolaY + 9 == y) && (destruido == false)) {
-            color--;
-            return true;
-        }
-        return false;
+        return (bolaX >= x) && (bolaX <= x + width + 5) && (bolaY + 10 == y) && (destruido == false);
     }
 
     public boolean golpeAbajo(int bolaX, int bolaY) {
-        if (((bolaX >= x) && (bolaX <= x + width)) && (bolaY - 9 == y + height) && (destruido == false)) {
-            color--;
-            return true;
-        }
-        return false;
+        return (bolaX >= x) && (bolaX <= x + width + 5) && (bolaY - 10 == y + height) && (destruido == false);
     }
 
     public boolean golpeDerecha(int bolaX, int bolaY) {
-        if ((bolaX - 9 == x + width-2) && ((bolaY + 9 >= y-1) && (bolaY - 9 <= y + height+1)) && (destruido == false)) {
-            color--;
-            return true;
-        }
-        return false;
+        return (bolaY >= y) && (bolaY <= y + height) && (bolaX - 10 == x + width) && (destruido == false);
     }
 
     public boolean golpeIzquierda(int bolaX, int bolaY) {
-        if ((bolaX + 9 == x) && ((bolaY + 9 >= y-1) && (bolaY - 9 <= y + height+1)) && (destruido == false)) {
-            color--;
-            return true;
-        }
-        return false;
+        return (bolaY >= y) && (bolaY <= y + height) && (bolaX + 10 == x) && (destruido == false);
+    }
+
+    public boolean golpeEsquinaAD(int bolaX, int bolaY) {
+        return (bolaY - 6 >= y + height - 9) && (bolaY - 6 <= y + height + 2)
+                && (bolaX - 6 >= x + width - 9) && (bolaX - 6 <= x + width + 2) && (destruido == false);
+    }
+
+    public boolean golpeEsquinaAI(int bolaX, int bolaY) {
+        return (bolaY - 6 >= y + height) && (bolaY - 6 <= y + height + 2)
+                && (bolaX + 6 >= x - 9) && (bolaX + 6 <= x + 2 ) && (destruido == false);
+    }
+
+    public boolean golpeEsquinaArD(int bolaX, int bolaY) {
+        return (bolaY + 6 >= y - 2) && (bolaY + 6 <= y + 9) && (bolaX - 6 >= x + width - 9)
+                && (bolaX - 6 <= x + width + 2) && (destruido == false);
+    }
+
+    public boolean golpeEsquinaArI(int bolaX, int bolaY) {
+        return (bolaY + 6 >= y - 2) && (bolaY + 6 <= y + 9) && (bolaX + 6 >= x - 9) 
+                && (bolaX + 6 <= x + 2) && (destruido == false);
     }
 }
 
