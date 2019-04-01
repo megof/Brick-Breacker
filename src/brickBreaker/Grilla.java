@@ -5,11 +5,9 @@ import java.awt.Graphics;
 
 public class Grilla extends Juego implements Constantes {
 
-    private int color;
+    int color;
     private boolean destruido = false;
     
-    private final Informacion info;
-
     public Grilla(int x, int y, int width, int height, int color) {
         super ( x, y, width, height );
         this.color = color;
