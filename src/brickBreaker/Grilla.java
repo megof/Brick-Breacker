@@ -67,7 +67,7 @@ public class Grilla extends Juego implements Constantes {
     }
 
     public boolean golpeEsquinaAI(int bolaX, int bolaY) {
-        return (bolaY - 6 >= y + height) && (bolaY - 6 <= y + height + 2)
+        return (bolaY - 6 >= y + height - 9) && (bolaY - 6 <= y + height + 2)
                 && (bolaX + 6 >= x - 9) && (bolaX + 6 <= x + 2 ) && (destruido == false);
     }
 

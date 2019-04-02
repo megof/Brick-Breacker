@@ -34,6 +34,7 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         this.addKeyListener(escucha);
         juego.start();
         stop();
+        pausa.set(true);
         img = new ImageIcon(getClass().getResource("/Imagenes/background.jpg"));
 
     }
@@ -200,7 +201,7 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         public void keyPressed(KeyEvent ke) {
             int key = ke.getKeyCode();
             if (key == KeyEvent.VK_SPACE) {
-                juego.resume();
+                start();
             }
         }
 

@@ -16,17 +16,15 @@ public class Informacion extends JPanel {
 
     @Override
     public void paint(Graphics g) {
-       if (Tablero.pausa.get() == false) {
-            super.paint(g);
-            g.drawString("00" + Tablero.puntaje, 10, 30);
-            g.drawImage(img.getImage(), 250, 10, 30, 30, null);
-            repaint();
-        }
+        super.paint(g);
+        g.drawString("00" + Tablero.puntaje, 10, 30);
+        g.drawImage(img.getImage(), 250, 10, 30, 30, null);
+        repaint();
     }
-    
+
     @Override
     public void update(Graphics g) {
         paint(g);
     }
-    
+
 }
