@@ -19,7 +19,7 @@ public class Tablero extends JPanel implements Runnable, Constantes {
     private final Grilla[][] grilla = new Grilla[7][5];
     private final Thread juego;
     private final ImageIcon img;
-    static int vidas = 2, puntaje = 0, ladriTotal = 35;
+    static int vidas = 2, puntaje = 0, ladriTotal = 35, nivel = 3;
     static AtomicBoolean pausa;
 
     public Tablero(int width, int height) {
@@ -37,6 +37,18 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         stop();
         pausa.set(true);
         img = new ImageIcon(getClass().getResource("/Imagenes/background.jpg"));
+    }
+
+    public final void grilla() {
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 5; j++) {
+                Random random = new Random();
+                int color = random.nextInt(3) + 1;
+                grilla[i][j] = new Grilla((i * LADRILLO_WIDTH + 5),
+                        ((j * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                        LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, color);
+            }
+        }
     }
 
     public void start() {
@@ -62,11 +74,34 @@ public class Tablero extends JPanel implements Runnable, Constantes {
             rebotePared();
             reboteBarra();
             reboteGrilla();
+            ganar();
             repaint();
             try {
-                juego.sleep(2);
+                juego.sleep(nivel);
             } catch (InterruptedException ex) {
 //                ex.printStackTrace();
+            }
+        }
+    }
+
+    public void ganar() {
+        if (ladriTotal == 0) {
+            if (nivel == 3) {
+                pausa.set(true);
+                grilla();
+                ladriTotal = 32;
+                grilla[1][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
+                        ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                        LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4);
+                grilla[3][1] = new Grilla((3 * LADRILLO_WIDTH + 5),
+                        ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                        LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4);
+                grilla[5][1] = new Grilla((5 * LADRILLO_WIDTH + 5),
+                        ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                        LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4);
+                nivel--;
+                reStart();
+                vidas += 2;
             }
         }
     }
@@ -81,6 +116,24 @@ public class Tablero extends JPanel implements Runnable, Constantes {
             for (int j = 0; j < 5; j++) {
                 grilla[i][j].paint(g);
             }
+        }
+    }
+
+    private void reStart() {
+        if (vidas != 0) {
+            vidas--;
+            bola.setX(BOLA_POS_INICIALX);
+            bola.setY(BOLA_POS_INICIALY);
+            barra.setX(BARRA_POS_INICIALX);
+            bola.setDirY(-1);
+            repaint();
+            stop();
+        } else {
+            JOptionPane.showMessageDialog(null, "su Puntaje fue de: " + puntaje);
+            ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
+            menu m = new menu();
+            m.main(null);
+            destroy();
         }
     }
 
@@ -105,24 +158,6 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         }
     }
 
-    private void reStart() {
-        if (vidas != 0) {
-            vidas--;
-            bola.setX(BOLA_POS_INICIALX);
-            bola.setY(BOLA_POS_INICIALY);
-            barra.setX(BARRA_POS_INICIALX);
-            bola.setDirY(-1);
-            repaint();
-            stop();
-        } else {
-            JOptionPane.showMessageDialog(null, "su Puntaje fue de: " + puntaje);
-            ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
-            menu m = new menu();
-            m.main(null);
-            destroy();
-        }
-    }
-
     public void reboteBarra() {
         if (inmunidad == false) {
             if (barra.golpeArriba(bola.getX(), bola.getY())) {
@@ -132,16 +167,6 @@ public class Tablero extends JPanel implements Runnable, Constantes {
                 bola.setDirY(bola.getDirY() * -1);
                 bola.setDirX(bola.getDirX() * -1);
                 inmunidad = true;
-            }
-        }
-    }
-
-    public final void grilla() {
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 5; j++) {
-                Random random = new Random();
-                int color = random.nextInt(3) + 1;
-                grilla[i][j] = new Grilla((i * LADRILLO_WIDTH + 5), ((j * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)), LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, color);
             }
         }
     }

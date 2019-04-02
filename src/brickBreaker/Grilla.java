@@ -2,34 +2,40 @@ package brickBreaker;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import javax.swing.ImageIcon;
 
 public class Grilla extends Juego implements Constantes {
 
     int color;
     private boolean destruido = false;
-    
+    private final ImageIcon img1,img2,img3,img4;
+
     public Grilla(int x, int y, int width, int height, int color) {
-        super ( x, y, width, height );
+        super(x, y, width, height);
         this.color = color;
+        img1 = new ImageIcon(getClass().getResource("/Imagenes/Ladrillo1.png"));
+        img2 = new ImageIcon(getClass().getResource("/Imagenes/Ladrillo2.png"));
+        img3 = new ImageIcon(getClass().getResource("/Imagenes/Ladrillo3.png"));
+        img4 = new ImageIcon(getClass().getResource("/Imagenes/Ladrillo4.png")); 
     }
 
     public void paint(Graphics g) {
         golpe();
-        if (color >= 1 && color <= 3) {
+        if (color >= 1 && color <= 4) {
             for (int i = 0; i < 7; i++) {
                 for (int j = 0; j < 5; j++) {
                     switch (color) {
                         case 1:
-                            g.setColor ( new Color ( 14, 255, 0 ) );
-                            g.fillRect ( x, y, width, height );
+                            g.drawImage(img1.getImage(),x , y, width,height,null );
                             break;
                         case 2:
-                            g.setColor ( new Color ( 21, 0, 255 ) );
-                            g.fillRect ( x, y, width, height );
+                            g.drawImage(img2.getImage(),x , y, width,height,null );
                             break;
                         case 3:
-                            g.setColor ( new Color ( 255, 26, 0 ) );
-                            g.fillRect ( x, y, width, height );
+                            g.drawImage(img3.getImage(),x , y, width,height,null );
+                            break;
+                        case 4:
+                            g.drawImage(img4.getImage(),x , y, width,height,null );
                             break;
                     }
                 }
@@ -38,13 +44,14 @@ public class Grilla extends Juego implements Constantes {
     }
 
     public void golpe() {
-        if (color==0){
-            destruido=true;
+        if (color == 0) {
+            destruido = true;
             Tablero.puntaje += 50;
             color = -1;
+            Tablero.ladriTotal--;
         }
     }
-    
+
     public boolean golpeArriba(int bolaX, int bolaY) {
         return (bolaX >= x) && (bolaX <= x + width + 5) && (bolaY + 9 == y) && (destruido == false);
     }
@@ -77,9 +84,7 @@ public class Grilla extends Juego implements Constantes {
     }
 
     public boolean golpeEsquinaArI(int bolaX, int bolaY) {
-        return (bolaY + 6 <= y - 9) && (bolaY + 6 <= y + 2) 
+        return (bolaY + 6 <= y - 9) && (bolaY + 6 <= y + 2)
                 && (bolaX + 6 >= x - 2) && (bolaX + 6 <= x + 9) && (destruido == false);
     }
 }
-
-

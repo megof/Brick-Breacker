@@ -30,7 +30,6 @@ public class Ventana extends javax.swing.JFrame implements Constantes {
         setBackground(new java.awt.Color(0, 0, 0));
         setForeground(new java.awt.Color(51, 51, 51));
         setMinimumSize(new java.awt.Dimension(715, 590));
-        setPreferredSize(new java.awt.Dimension(709, 571));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel4.setPreferredSize(new java.awt.Dimension(700, 500));
@@ -63,7 +62,7 @@ public class Ventana extends javax.swing.JFrame implements Constantes {
 
         getContentPane().add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 11, 690, 50));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/imagenes-de-autos-tuning-que-se-mueven-para-fondo-de-pantalla-en-3d-1.jpg"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/FondoFrame.jpg"))); // NOI18N
         jLabel2.setMaximumSize(new java.awt.Dimension(730, 600));
         jLabel2.setMinimumSize(new java.awt.Dimension(730, 600));
         jLabel2.setPreferredSize(new java.awt.Dimension(730, 600));
