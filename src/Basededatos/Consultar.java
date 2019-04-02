@@ -1,6 +1,5 @@
 package Basededatos;
 
-import Basededatos.Conectar;
 import com.mysql.jdbc.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
