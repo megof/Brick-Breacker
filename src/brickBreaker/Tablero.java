@@ -1,5 +1,7 @@
 package brickBreaker;
 
+import Basededatos.Crear;
+import Final.Jugadores;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -93,13 +95,13 @@ public class Tablero extends JPanel implements Runnable, Constantes {
             bola.setDirY(bola.getDirY() * -1);
             inmunidad = false;
         } else if (bola.getY() > 510) {
-            if (puntaje > 0) {
-                if (puntaje == 50) {
-                    puntaje -= 50;
-                } else {
-                    puntaje -= 100;
-                }
-            }
+//            if (puntaje > 0) {
+//                if (puntaje == 50) {
+//                    puntaje -= 50;
+//                } else {
+//                    puntaje -= 100;
+//                }
+//            }
             reStart();
         }
     }

@@ -1,5 +1,6 @@
 package brickBreaker;
 
+import Final.Jugadores;
 import java.awt.Graphics;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -17,8 +18,10 @@ public class Informacion extends JPanel {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        g.drawString("00" + Tablero.puntaje, 10, 30);
+        g.drawString(Jugadores.Jugador, 10, 20);
+        g.drawString(""+ Tablero.puntaje, 10, 40);
         g.drawImage(img.getImage(), 250, 10, 30, 30, null);
+        g.drawString("=  "+Tablero.vidas, 280, 30);
         repaint();
     }
 

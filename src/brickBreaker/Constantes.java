@@ -9,7 +9,7 @@ public interface Constantes {
 
     public static final int BOLA_RADIO = 20;
     public static final int BOLA_POS_INICIALX = 330;
-    public static final int BOLA_POS_INICIALY = 430;
+    public static final int BOLA_POS_INICIALY = 425;
 
     public static final int BARRA_WIDTH = 100;
     public static final int BARRA_HEIGHT = 20;
