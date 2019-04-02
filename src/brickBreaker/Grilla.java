@@ -46,39 +46,39 @@ public class Grilla extends Juego implements Constantes {
     }
     
     public boolean golpeArriba(int bolaX, int bolaY) {
-        return (bolaX >= x) && (bolaX <= x + width + 5) && (bolaY + 10 == y) && (destruido == false);
+        return (bolaX >= x) && (bolaX <= x + width + 5) && (bolaY + 9 == y) && (destruido == false);
     }
 
     public boolean golpeAbajo(int bolaX, int bolaY) {
-        return (bolaX >= x) && (bolaX <= x + width + 5) && (bolaY - 10 == y + height) && (destruido == false);
+        return (bolaX >= x) && (bolaX <= x + width + 5) && (bolaY - 9 == y + height) && (destruido == false);
     }
 
     public boolean golpeDerecha(int bolaX, int bolaY) {
-        return (bolaY >= y) && (bolaY <= y + height) && (bolaX - 10 == x + width) && (destruido == false);
+        return (bolaY >= y) && (bolaY <= y + height + 5) && (bolaX - 9 == x + width) && (destruido == false);
     }
 
     public boolean golpeIzquierda(int bolaX, int bolaY) {
-        return (bolaY >= y) && (bolaY <= y + height) && (bolaX + 10 == x) && (destruido == false);
+        return (bolaY >= y) && (bolaY <= y + height + 5) && (bolaX + 9 == x) && (destruido == false);
     }
 
     public boolean golpeEsquinaAD(int bolaX, int bolaY) {
-        return (bolaY - 6 >= y + height - 9) && (bolaY - 6 <= y + height + 2)
-                && (bolaX - 6 >= x + width - 9) && (bolaX - 6 <= x + width + 2) && (destruido == false);
+        return (bolaY - 5 >= y + height - 9) && (bolaY - 5 <= y + height + 2)
+                && (bolaX - 5 >= x + width - 9) && (bolaX - 5 <= x + width + 2) && (destruido == false);
     }
 
     public boolean golpeEsquinaAI(int bolaX, int bolaY) {
-        return (bolaY - 6 >= y + height - 9) && (bolaY - 6 <= y + height + 2)
-                && (bolaX + 6 >= x - 9) && (bolaX + 6 <= x + 2 ) && (destruido == false);
+        return (bolaY - 5 <= y + height - 9) && (bolaY - 5 >= y + height)
+                && (bolaX + 5 >= x - 9) && (bolaX + 5 <= x) && (destruido == false);
     }
 
     public boolean golpeEsquinaArD(int bolaX, int bolaY) {
-        return (bolaY + 6 >= y - 2) && (bolaY + 6 <= y + 9) && (bolaX - 6 >= x + width - 9)
-                && (bolaX - 6 <= x + width + 2) && (destruido == false);
+        return (bolaY + 5 >= y - 2) && (bolaY + 5 <= y + 9) && (bolaX - 5 >= x + width - 9)
+                && (bolaX - 5 <= x + width + 2) && (destruido == false);
     }
 
     public boolean golpeEsquinaArI(int bolaX, int bolaY) {
-        return (bolaY + 6 >= y - 2) && (bolaY + 6 <= y + 9) && (bolaX + 6 >= x - 9) 
-                && (bolaX + 6 <= x + 2) && (destruido == false);
+        return (bolaY + 5 <= y - 2) && (bolaY + 5 <= y + 9) && (bolaX + 5 >= x - 9) 
+                && (bolaX + 5 <= x + 2) && (destruido == false);
     }
 }
 

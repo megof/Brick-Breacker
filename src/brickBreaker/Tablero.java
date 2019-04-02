@@ -66,9 +66,9 @@ public class Tablero extends JPanel implements Runnable, Constantes {
             reboteGrilla();
             repaint();
             try {
-                juego.sleep(3);
+                juego.sleep(2);
             } catch (InterruptedException ex) {
-                ex.printStackTrace();
+//                ex.printStackTrace();
             }
         }
     }
@@ -133,46 +133,55 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 5; j++) {
                 if (grilla[i][j].golpeArriba(bola.getX() + 10, bola.getY() + 10)) {
+                    JOptionPane.showMessageDialog(null, "rebote Arriba");
                     grilla[i][j].color--;
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
+                    
                 }
                 if (grilla[i][j].golpeAbajo(bola.getX() + 10, bola.getY() + 10)) {
+                    JOptionPane.showMessageDialog(null, "rebote Abajo");
                     grilla[i][j].color--;
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
                     break;
                 }
                 if (grilla[i][j].golpeDerecha(bola.getX() + 10, bola.getY() + 10)) {
+                    JOptionPane.showMessageDialog(null, "rebote dwerwexcha");
                     grilla[i][j].color--;
                     bola.setDirX(bola.getDirX() * -1);
                     inmunidad = false;
                 }
                 if (grilla[i][j].golpeIzquierda(bola.getX() + 10, bola.getY() + 10)) {
+                    JOptionPane.showMessageDialog(null, "rebote izquiwersda");
                     grilla[i][j].color--;
                     bola.setDirX(bola.getDirX() * -1);
                     inmunidad = false;
                     break;
                 }
                 if (grilla[i][j].golpeEsquinaAD(bola.getX() + 10, bola.getY() + 10)) {
+                    JOptionPane.showMessageDialog(null, "rebote Asd");
                     grilla[i][j].color--;
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
                 }
                 if (grilla[i][j].golpeEsquinaAI(bola.getX() + 10, bola.getY() + 10)) {
+                    JOptionPane.showMessageDialog(null, "rebote Ai");
                     grilla[i][j].color--;
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
                 }
                 if (grilla[i][j].golpeEsquinaArD(bola.getX() + 10, bola.getY() + 10)) {
+                    JOptionPane.showMessageDialog(null, "rebote Arsd");
                     grilla[i][j].color--;
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
                 }
                 if (grilla[i][j].golpeEsquinaArI(bola.getX() + 10, bola.getY() + 10)) {
+                    JOptionPane.showMessageDialog(null, "rebote Ari");
                     grilla[i][j].color--;
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
@@ -188,6 +197,7 @@ public class Tablero extends JPanel implements Runnable, Constantes {
             bola.setX(BOLA_POS_INICIALX);
             bola.setY(BOLA_POS_INICIALY);
             barra.setX(BARRA_POS_INICIALX);
+            bola.setDirY(-1);
             repaint();
             stop();
         } else {
