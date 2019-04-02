@@ -1,5 +1,6 @@
 package brickBreaker;
 
+import Final.menu;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -36,7 +37,6 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         stop();
         pausa.set(true);
         img = new ImageIcon(getClass().getResource("/Imagenes/background.jpg"));
-
     }
 
     public void start() {
@@ -116,6 +116,9 @@ public class Tablero extends JPanel implements Runnable, Constantes {
             stop();
         } else {
             JOptionPane.showMessageDialog(null, "su Puntaje fue de: " + puntaje);
+            ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
+            menu m = new menu();
+            m.main(null);
             destroy();
         }
     }

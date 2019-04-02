@@ -1,5 +1,7 @@
 package brickBreaker;
 
+
+
 public class Ventana extends javax.swing.JFrame implements Constantes {
 
     static Tablero tablero;
@@ -14,6 +16,7 @@ public class Ventana extends javax.swing.JFrame implements Constantes {
         jPanel5.add(informacion);
         jPanel4.add(tablero);
     }
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
