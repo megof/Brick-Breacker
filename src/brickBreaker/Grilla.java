@@ -62,23 +62,23 @@ public class Grilla extends Juego implements Constantes {
     }
 
     public boolean golpeEsquinaAD(int bolaX, int bolaY) {
-        return (bolaY - 5 >= y + height - 9) && (bolaY - 5 <= y + height + 2)
-                && (bolaX - 5 >= x + width - 9) && (bolaX - 5 <= x + width + 2) && (destruido == false);
+        return (bolaY - 6 >= y + height - 9) && (bolaY - 6 <= y + height + 2)
+                && (bolaX - 6 >= x + width - 9) && (bolaX - 6 <= x + width + 2) && (destruido == false);
     }
 
     public boolean golpeEsquinaAI(int bolaX, int bolaY) {
-        return (bolaY - 5 <= y + height - 9) && (bolaY - 5 >= y + height)
-                && (bolaX + 5 >= x - 9) && (bolaX + 5 <= x) && (destruido == false);
+        return (bolaY - 6 >= y + height - 9) && (bolaY - 6 <= y + height + 2)
+                && (bolaX + 6 >= x - 2) && (bolaX + 6 <= x + 9) && (destruido == false);
     }
 
     public boolean golpeEsquinaArD(int bolaX, int bolaY) {
-        return (bolaY + 5 >= y - 2) && (bolaY + 5 <= y + 9) && (bolaX - 5 >= x + width - 9)
-                && (bolaX - 5 <= x + width + 2) && (destruido == false);
+        return (bolaY + 6 >= y - 2) && (bolaY + 6 <= y + 9) && (bolaX - 6 >= x + width - 9)
+                && (bolaX - 6 <= x + width + 2) && (destruido == false);
     }
 
     public boolean golpeEsquinaArI(int bolaX, int bolaY) {
-        return (bolaY + 5 <= y - 2) && (bolaY + 5 <= y + 9) && (bolaX + 5 >= x - 9) 
-                && (bolaX + 5 <= x + 2) && (destruido == false);
+        return (bolaY + 6 <= y - 9) && (bolaY + 6 <= y + 2) 
+                && (bolaX + 6 >= x - 2) && (bolaX + 6 <= x + 9) && (destruido == false);
     }
 }
 

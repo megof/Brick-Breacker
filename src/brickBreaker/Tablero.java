@@ -20,14 +20,14 @@ public class Tablero extends JPanel implements Runnable, Constantes {
     private final Grilla[][] grilla = new Grilla[7][5];
     private final Thread juego;
     private final ImageIcon img;
-    static int vidas = 3, puntaje = 0, ladriTotal = 35;
+    static int vidas = 2, puntaje = 0, ladriTotal = 35;
     static AtomicBoolean pausa;
 
     public Tablero(int width, int height) {
         super.setSize(width, height);
         this.setFocusable(true);
         barra = new Barra(BARRA_POS_INICIALX, BARRA_POS_INICIALY, BARRA_WIDTH, BARRA_HEIGHT);
-        bola = new Bola(BOLA_POS_INICIALX, BOLA_POS_INICIALY, BOLA_RADIO, BOLA_RADIO);
+        bola = new Bola(BOLA_POS_INICIALX, 280, BOLA_RADIO, BOLA_RADIO);
         pausa = new AtomicBoolean();
         escucha = new Escucha();
         juego = new Thread(this);
@@ -95,13 +95,13 @@ public class Tablero extends JPanel implements Runnable, Constantes {
             bola.setDirY(bola.getDirY() * -1);
             inmunidad = false;
         } else if (bola.getY() > 510) {
-//            if (puntaje > 0) {
-//                if (puntaje == 50) {
-//                    puntaje -= 50;
-//                } else {
-//                    puntaje -= 100;
-//                }
-//            }
+            if (puntaje > 0) {
+                if (puntaje == 50) {
+                    puntaje -= 50;
+                } else {
+                    puntaje -= 100;
+                }
+            }
             reStart();
         }
     }
@@ -133,55 +133,47 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 5; j++) {
                 if (grilla[i][j].golpeArriba(bola.getX() + 10, bola.getY() + 10)) {
-                    JOptionPane.showMessageDialog(null, "rebote Arriba");
                     grilla[i][j].color--;
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
                     
                 }
                 if (grilla[i][j].golpeAbajo(bola.getX() + 10, bola.getY() + 10)) {
-                    JOptionPane.showMessageDialog(null, "rebote Abajo");
                     grilla[i][j].color--;
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
                     break;
                 }
                 if (grilla[i][j].golpeDerecha(bola.getX() + 10, bola.getY() + 10)) {
-                    JOptionPane.showMessageDialog(null, "rebote dwerwexcha");
                     grilla[i][j].color--;
                     bola.setDirX(bola.getDirX() * -1);
                     inmunidad = false;
                 }
                 if (grilla[i][j].golpeIzquierda(bola.getX() + 10, bola.getY() + 10)) {
-                    JOptionPane.showMessageDialog(null, "rebote izquiwersda");
                     grilla[i][j].color--;
                     bola.setDirX(bola.getDirX() * -1);
                     inmunidad = false;
                     break;
                 }
                 if (grilla[i][j].golpeEsquinaAD(bola.getX() + 10, bola.getY() + 10)) {
-                    JOptionPane.showMessageDialog(null, "rebote Asd");
                     grilla[i][j].color--;
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
                 }
                 if (grilla[i][j].golpeEsquinaAI(bola.getX() + 10, bola.getY() + 10)) {
-                    JOptionPane.showMessageDialog(null, "rebote Ai");
                     grilla[i][j].color--;
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
                 }
                 if (grilla[i][j].golpeEsquinaArD(bola.getX() + 10, bola.getY() + 10)) {
-                    JOptionPane.showMessageDialog(null, "rebote Arsd");
                     grilla[i][j].color--;
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
                 }
                 if (grilla[i][j].golpeEsquinaArI(bola.getX() + 10, bola.getY() + 10)) {
-                    JOptionPane.showMessageDialog(null, "rebote Ari");
                     grilla[i][j].color--;
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
@@ -203,10 +195,11 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         } else {
             JOptionPane.showMessageDialog(null, "su Puntaje fue de: " + puntaje);
             destroy();
+            
         }
 
     }
-
+   
     private class Escucha extends KeyAdapter implements MouseMotionListener {
 
         @Override
