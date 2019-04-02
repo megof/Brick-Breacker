@@ -5,7 +5,9 @@
  */
 package Final;
 
+import brickBreaker.Ventana;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -13,11 +15,14 @@ import javax.swing.JFrame;
  */
 public class menu extends javax.swing.JFrame {
 
+    String Jugador;
     /**
      * Creates new form menu
      */
     public menu() {
+        Jugador = Jugadores.Jugador;
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -29,38 +34,38 @@ public class menu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        BtnCrear = new javax.swing.JButton();
+        BtnPuntuaciones = new javax.swing.JButton();
+        BtnJugadores = new javax.swing.JButton();
+        BtnJugar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("crear");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        BtnCrear.setText("crear");
+        BtnCrear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                BtnCrearActionPerformed(evt);
             }
         });
 
-        jButton2.setText("puntuaciones");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        BtnPuntuaciones.setText("puntuaciones");
+        BtnPuntuaciones.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                BtnPuntuacionesActionPerformed(evt);
             }
         });
 
-        jButton3.setText("jugadores");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        BtnJugadores.setText("jugadores");
+        BtnJugadores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                BtnJugadoresActionPerformed(evt);
             }
         });
 
-        jButton4.setText("Jugar");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        BtnJugar.setText("Jugar");
+        BtnJugar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                BtnJugarActionPerformed(evt);
             }
         });
 
@@ -71,61 +76,58 @@ public class menu extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(100, 100, 100)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3)
+                    .addComponent(BtnCrear)
+                    .addComponent(BtnJugadores)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(BtnPuntuaciones)
                         .addGap(42, 42, 42)
-                        .addComponent(jButton4)))
+                        .addComponent(BtnJugar)))
                 .addContainerGap(102, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(106, 106, 106)
-                .addComponent(jButton1)
+                .addComponent(BtnCrear)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton4))
+                    .addComponent(BtnPuntuaciones)
+                    .addComponent(BtnJugar))
                 .addGap(18, 18, 18)
-                .addComponent(jButton3)
+                .addComponent(BtnJugadores)
                 .addContainerGap(96, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+    private void BtnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCrearActionPerformed
+        this.dispose();
         Crud m = new Crud();
-            String[] args=null;
-            m.main(args);
-            this.dispose();
 // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_BtnCrearActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void BtnPuntuacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPuntuacionesActionPerformed
         // TODO add your handling code here:
         Puntuaciones m = new Puntuaciones();
-            String[] args=null;
-            m.main(args);
-            this.dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_BtnPuntuacionesActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        
+    private void BtnJugadoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnJugadoresActionPerformed
         Jugadores m = new Jugadores();
-            String[] args=null;
-            m.main(args);
+        this.dispose();
+    }//GEN-LAST:event_BtnJugadoresActionPerformed
+
+    private void BtnJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnJugarActionPerformed
+        if(Jugador==""){
+            JOptionPane.showMessageDialog(null, "Por favor seleccione un jugador");
+        }else{
             this.dispose();
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-
-                // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+            Ventana v = new Ventana();
+            v.main(null);
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BtnJugarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -163,9 +165,9 @@ public class menu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton BtnCrear;
+    private javax.swing.JButton BtnJugadores;
+    private javax.swing.JButton BtnJugar;
+    private javax.swing.JButton BtnPuntuaciones;
     // End of variables declaration//GEN-END:variables
 }

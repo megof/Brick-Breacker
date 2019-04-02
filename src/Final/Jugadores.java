@@ -3,6 +3,7 @@ package Final;
 import Basededatos.Consultar;
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -15,7 +16,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 public class Jugadores extends JFrame implements ActionListener {
-
+    public static String Jugador="";
     private final Container contenedor;
     private final JButton Bcargar;
     private final JButton Bcancelar;
@@ -42,6 +43,7 @@ public class Jugadores extends JFrame implements ActionListener {
         cargarlista();
         Llista.setModel(modelo);
         Sbarra = new JScrollPane(Llista);
+        Sbarra.setPreferredSize(new Dimension(200,120));
         
         Pbotones = new JPanel(new GridLayout(1, 2));
         Pbotones.add(Bcargar);
@@ -55,8 +57,10 @@ public class Jugadores extends JFrame implements ActionListener {
         contenedor.add(Pbotones);
 
         setSize(300, 225);
-        setVisible(true);
         setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
     public void cargarlista(){
         Consultar consultar = new Consultar("","proyecto_jugadores","Jugadores_Nick"); 
@@ -74,7 +78,15 @@ public class Jugadores extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent evento) {
         if (evento.getSource()== Bcargar){
-            System.out.println(Llista.getSelectedValue());
+            if(Llista.getSelectedValue()!=null){
+                Jugador=""+Llista.getSelectedValue();
+                dispose();
+                menu m = new menu();
+                m.main(null);
+            }else{
+                JOptionPane.showMessageDialog(null, "Por favor selecciona un jugador");
+            }
+            //System.out.println(Llista.getSelectedValue());
         }else{
             //devolver a la otra ventana
             String[] args=null;
@@ -82,11 +94,5 @@ public class Jugadores extends JFrame implements ActionListener {
             m.main(args);
             this.dispose();
         }
-    }
-
-    public static void main(String[] args) {
-        Jugadores aplicacion = new Jugadores();
-        aplicacion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     }
 }

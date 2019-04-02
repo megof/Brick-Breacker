@@ -40,7 +40,7 @@ public class Puntuaciones extends JFrame implements ActionListener {
         tabla = new JTable(contenido, encabezados);
         tabla.enable(false); 
         Sbarra = new JScrollPane(tabla);
-        Sbarra.setPreferredSize(new Dimension(298,199)); 
+        Sbarra.setPreferredSize(new Dimension(300,199)); 
         JLabel l = new JLabel("prueba");
         JPanel panel = new JPanel(new GridLayout(1,1));
         panel.add(Sbarra);
@@ -51,9 +51,11 @@ public class Puntuaciones extends JFrame implements ActionListener {
         contenedor.add(Sbarra);
         contenedor.add(Bvolver);
 
-        setSize(400, 300);
-        setVisible(true);
+        setSize(350, 300);
         setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
     public void cargarlista(){
         encabezados[0]="Nombre";
@@ -67,10 +69,10 @@ public class Puntuaciones extends JFrame implements ActionListener {
         }else{
             try {
                 while(Rs.next()){
-                        contenido[i][0]=obtenernombres(Integer.parseInt(Rs.getString("Partidas_Jugador1")));
-                        contenido[i][1]=Rs.getString("Partidas_Puntaje1");
-                        contenido[i][2]=Rs.getString("Partidas_Fecha");
-                        i++;
+                    contenido[i][0]=obtenernombres(Integer.parseInt(Rs.getString("Partidas_Jugador1")));
+                    contenido[i][1]=Rs.getString("Partidas_Puntaje1");
+                    contenido[i][2]=Rs.getString("Partidas_Fecha");
+                    i++;
                 }
             } catch (SQLException ex) {}
         }
@@ -91,11 +93,5 @@ public class Puntuaciones extends JFrame implements ActionListener {
             menu m = new menu();
             m.main(args);
             this.dispose();
-    }
-
-    public static void main(String[] args) {
-        Puntuaciones aplicacion = new Puntuaciones();
-        aplicacion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     }
 }

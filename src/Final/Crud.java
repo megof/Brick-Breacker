@@ -39,9 +39,11 @@ public class Crud extends JFrame implements ActionListener {
         contenedor.add(Lmensaje);
         contenedor.add(Pcampos);
 
-        setSize(300, 225);
-        setVisible(true);
+        setSize(300, 130);
         setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
     @Override
     public void actionPerformed(ActionEvent evento){
@@ -55,19 +57,15 @@ public class Crud extends JFrame implements ActionListener {
                 }else{
                     JOptionPane.showMessageDialog(null, "Exito al crear jugador", "Exito", 1);
                     this.dispose();
+                    menu m = new menu();
+                    m.main(null);
                 }                
             }
         }else{
             //devolver a la otra ventana
-            String[] args=null;
-            menu m = new menu();
-            m.main(args);
             this.dispose();
+            menu m = new menu();
+            m.main(null);
         }
-    }
-    public static void main(String[] args) {
-        Crud aplicacion = new Crud();
-        aplicacion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     }
 }
