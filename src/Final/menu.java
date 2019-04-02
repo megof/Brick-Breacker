@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 public class menu extends javax.swing.JFrame {
 
     String Jugador;
+
     /**
      * Creates new form menu
      */
@@ -119,19 +120,15 @@ public class menu extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnJugadoresActionPerformed
 
     private void BtnJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnJugarActionPerformed
-        if(Jugador==""){
+        if (Jugador == "") {
             JOptionPane.showMessageDialog(null, "Por favor seleccione un jugador");
-        }else{
+        } else {
             this.dispose();
             Ventana v = new Ventana();
             v.main(null);
         }
-        // TODO add your handling code here:
     }//GEN-LAST:event_BtnJugarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
