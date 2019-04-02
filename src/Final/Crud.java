@@ -15,14 +15,14 @@ public class Crud extends JFrame implements ActionListener {
     private final JLabel Lnombre, Lmensaje;
     private final JTextField TFnombre;
     private final JPanel Pcampos;
+    private final Icon save, delete;
 
     public Crud() {
         super("Registro de usuarios");
-        Icon save = new ImageIcon("img/save.PNG");
+        save = new ImageIcon(getClass().getResource("/Imagenes/save.PNG"));
         Bcrear = new JButton("Crear", save);
         Bcrear.addActionListener(this);
-
-        Icon delete = new ImageIcon("img/delete.PNG");
+        delete = new ImageIcon(getClass().getResource("/Imagenes/delete.PNG"));
         Bcancelar = new JButton("Cancelar", delete);
         Bcancelar.addActionListener(this);
 
@@ -45,23 +45,24 @@ public class Crud extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         setVisible(true);
     }
+
     @Override
-    public void actionPerformed(ActionEvent evento){
-        if (evento.getSource()== Bcrear){
-            if((TFnombre.getText()).length()==0){
+    public void actionPerformed(ActionEvent evento) {
+        if (evento.getSource() == Bcrear) {
+            if ((TFnombre.getText()).length() == 0) {
                 JOptionPane.showMessageDialog(null, "Por favor ingresa un Nombre en el campo de texto", "Error al crear", 0);
-            }else{
+            } else {
                 Crear crear = new Crear(TFnombre.getText());
-                if(crear.GetConsult()==null){
+                if (crear.GetConsult() == null) {
                     JOptionPane.showMessageDialog(null, "error inesperado, por favor intenta de nuevo", "Error al crear", 0);
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Exito al crear jugador", "Exito", 1);
                     this.dispose();
                     menu m = new menu();
                     m.main(null);
-                }                
+                }
             }
-        }else{
+        } else {
             //devolver a la otra ventana
             this.dispose();
             menu m = new menu();

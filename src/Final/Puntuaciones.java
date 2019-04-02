@@ -21,11 +21,12 @@ public class Puntuaciones extends JFrame implements ActionListener {
     ResultSet Rs, auxiliar;
     private final String[] encabezados;
     private final String[][] contenido;
-
+    private final Icon back;
+    
     public Puntuaciones() {
         super("Selección de usuarios");
 
-        Icon back = new ImageIcon("img/back.PNG");
+        back = new ImageIcon(getClass().getResource("/Imagenes/back.PNG"));
         Bvolver = new JButton("Volver", back);
         Bvolver.addActionListener(this);
 

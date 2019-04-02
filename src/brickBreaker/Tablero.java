@@ -25,7 +25,7 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         super.setSize(width, height);
         this.setFocusable(true);
         barra = new Barra(BARRA_POS_INICIALX, BARRA_POS_INICIALY, BARRA_WIDTH, BARRA_HEIGHT);
-        bola = new Bola(BOLA_POS_INICIALX, 280, BOLA_RADIO, BOLA_RADIO);
+        bola = new Bola(BOLA_POS_INICIALX, BOLA_POS_INICIALY, BOLA_RADIO, BOLA_RADIO);
         pausa = new AtomicBoolean();
         escucha = new Escucha();
         juego = new Thread(this);
@@ -44,7 +44,7 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         pausa.set(false);
     }
 
-    public void stop() {
+    public final void stop() {
         juego.suspend();
     }
 
@@ -93,6 +93,7 @@ public class Tablero extends JPanel implements Runnable, Constantes {
             bola.setDirY(bola.getDirY() * -1);
             inmunidad = false;
         } else if (bola.getY() > 510) {
+            pausa.set(true);
             if (puntaje > 0) {
                 if (puntaje == 50) {
                     puntaje -= 50;
@@ -101,6 +102,21 @@ public class Tablero extends JPanel implements Runnable, Constantes {
                 }
             }
             reStart();
+        }
+    }
+
+    private void reStart() {
+        if (vidas != 0) {
+            vidas--;
+            bola.setX(BOLA_POS_INICIALX);
+            bola.setY(BOLA_POS_INICIALY);
+            barra.setX(BARRA_POS_INICIALX);
+            bola.setDirY(-1);
+            repaint();
+            stop();
+        } else {
+            JOptionPane.showMessageDialog(null, "su Puntaje fue de: " + puntaje);
+            destroy();
         }
     }
 
@@ -117,7 +133,7 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         }
     }
 
-    public void grilla() {
+    public final void grilla() {
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 5; j++) {
                 Random random = new Random();
@@ -134,7 +150,7 @@ public class Tablero extends JPanel implements Runnable, Constantes {
                     grilla[i][j].color--;
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
-                    
+
                 }
                 if (grilla[i][j].golpeAbajo(bola.getX() + 10, bola.getY() + 10)) {
                     grilla[i][j].color--;
@@ -181,23 +197,6 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         }
     }
 
-    private void reStart() {
-        if (vidas != 0) {
-            vidas--;
-            bola.setX(BOLA_POS_INICIALX);
-            bola.setY(BOLA_POS_INICIALY);
-            barra.setX(BARRA_POS_INICIALX);
-            bola.setDirY(-1);
-            repaint();
-            stop();
-        } else {
-            JOptionPane.showMessageDialog(null, "su Puntaje fue de: " + puntaje);
-            destroy();
-            
-        }
-
-    }
-   
     private class Escucha extends KeyAdapter implements MouseMotionListener {
 
         @Override
@@ -216,6 +215,10 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         public void mouseMoved(MouseEvent e) {
             if (pausa.get() == false) {
                 barra.setX(e.getX() - 50);
+            } else if (pausa.get() == true) {
+                barra.setX(e.getX() - 50);
+                bola.setX(e.getX() - 10);
+                repaint();
             }
         }
     }

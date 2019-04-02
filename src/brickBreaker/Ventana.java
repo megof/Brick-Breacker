@@ -1,6 +1,6 @@
 package brickBreaker;
 
-public class Ventana extends javax.swing.JFrame implements Constantes{
+public class Ventana extends javax.swing.JFrame implements Constantes {
 
     static Tablero tablero;
     static Informacion informacion;
