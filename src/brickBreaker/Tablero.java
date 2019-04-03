@@ -19,7 +19,7 @@ public class Tablero extends JPanel implements Runnable, Constantes {
     private final Grilla[][] grilla = new Grilla[7][5];
     private final Thread juego;
     private final ImageIcon img;
-    static int vidas = 2, puntaje = 0, ladriTotal = 35, nivel = 3;
+    static int vidas = 3, puntaje = 0, ladriTotal = 35, nivel = 3;
     static AtomicBoolean pausa;
 
     public Tablero(int width, int height) {
@@ -100,8 +100,8 @@ public class Tablero extends JPanel implements Runnable, Constantes {
                         ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
                         LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4);
                 nivel--;
+                vidas++;
                 reStart();
-                vidas += 2;
             }
         }
     }
@@ -121,7 +121,6 @@ public class Tablero extends JPanel implements Runnable, Constantes {
 
     private void reStart() {
         if (vidas != 0) {
-            vidas--;
             bola.setX(BOLA_POS_INICIALX);
             bola.setY(BOLA_POS_INICIALY);
             barra.setX(BARRA_POS_INICIALX);
@@ -154,6 +153,7 @@ public class Tablero extends JPanel implements Runnable, Constantes {
                     puntaje -= 100;
                 }
             }
+            vidas--;
             reStart();
         }
     }
@@ -259,10 +259,10 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         @Override
         public void mouseMoved(MouseEvent e) {
             if (pausa.get() == false) {
-                barra.setX(e.getX() - 50);
+                barra.setX(e.getX() - (barra.width / 2));
             } else if (pausa.get() == true) {
-                barra.setX(e.getX() - 50);
-                bola.setX(e.getX() - 10);
+                barra.setX(e.getX() - (barra.width / 2));
+                bola.setX(e.getX() - (bola.width / 2));
                 repaint();
             }
         }
