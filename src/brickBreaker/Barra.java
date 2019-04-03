@@ -2,16 +2,19 @@ package brickBreaker;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import javax.swing.ImageIcon;
 
 public class Barra extends Juego implements Constantes {
-
+    
+    private final ImageIcon img;
+    
     public Barra(int x, int y, int width, int height) {
         super(x, y, width, height);
+        img = new ImageIcon(getClass().getResource("/Imagenes/barra.png")); 
     }
 
     public void paint(Graphics g) {
-        g.setColor(new Color(255, 92, 41 ));
-        g.fillRect(x, y, width, height);
+        g.drawImage(img.getImage(),x , y, width,height,null );
     }
 
     public boolean golpeArriba(int bolaX, int bolaY) {

@@ -175,48 +175,65 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 5; j++) {
                 if (grilla[i][j].golpeArriba(bola.getX() + 10, bola.getY() + 10)) {
+                    if (grilla[i][j].color != 4) {
+                        grilla[i][j].color--;
+                    }
                     grilla[i][j].color--;
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
 
                 }
                 if (grilla[i][j].golpeAbajo(bola.getX() + 10, bola.getY() + 10)) {
-                    grilla[i][j].color--;
+                    if (grilla[i][j].color != 4) {
+                        grilla[i][j].color--;
+                    }
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
                     break;
                 }
                 if (grilla[i][j].golpeDerecha(bola.getX() + 10, bola.getY() + 10)) {
-                    grilla[i][j].color--;
+                    if (grilla[i][j].color != 4) {
+                        grilla[i][j].color--;
+                    }
                     bola.setDirX(bola.getDirX() * -1);
                     inmunidad = false;
                 }
                 if (grilla[i][j].golpeIzquierda(bola.getX() + 10, bola.getY() + 10)) {
-                    grilla[i][j].color--;
+                    if (grilla[i][j].color != 4) {
+                        grilla[i][j].color--;
+                    }
                     bola.setDirX(bola.getDirX() * -1);
                     inmunidad = false;
                     break;
                 }
                 if (grilla[i][j].golpeEsquinaAD(bola.getX() + 10, bola.getY() + 10)) {
-                    grilla[i][j].color--;
+                    if (grilla[i][j].color != 4) {
+                        grilla[i][j].color--;
+                    }
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
                 }
                 if (grilla[i][j].golpeEsquinaAI(bola.getX() + 10, bola.getY() + 10)) {
-                    grilla[i][j].color--;
+                    if (grilla[i][j].color != 4) {
+                        grilla[i][j].color--;
+                    }
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
                 }
                 if (grilla[i][j].golpeEsquinaArD(bola.getX() + 10, bola.getY() + 10)) {
-                    grilla[i][j].color--;
+                    if (grilla[i][j].color != 4) {
+                        grilla[i][j].color--;
+                    }
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
                 }
                 if (grilla[i][j].golpeEsquinaArI(bola.getX() + 10, bola.getY() + 10)) {
-                    grilla[i][j].color--;
+                    if (grilla[i][j].color != 4) {
+                        grilla[i][j].color--;
+                    }
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
