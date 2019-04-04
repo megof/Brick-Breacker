@@ -8,7 +8,7 @@ public class Grilla extends Juego implements Constantes {
 
     int color;
     private boolean destruido = false;
-    private final ImageIcon img1,img2,img3,img4;
+    private final ImageIcon img1, img2, img3, img4;
 
     public Grilla(int x, int y, int width, int height, int color) {
         super(x, y, width, height);
@@ -16,7 +16,7 @@ public class Grilla extends Juego implements Constantes {
         img1 = new ImageIcon(getClass().getResource("/Imagenes/Ladrillo1.png"));
         img2 = new ImageIcon(getClass().getResource("/Imagenes/Ladrillo2.png"));
         img3 = new ImageIcon(getClass().getResource("/Imagenes/Ladrillo3.png"));
-        img4 = new ImageIcon(getClass().getResource("/Imagenes/Ladrillo4.png")); 
+        img4 = new ImageIcon(getClass().getResource("/Imagenes/Ladrillo4.png"));
     }
 
     public void paint(Graphics g) {
@@ -26,16 +26,16 @@ public class Grilla extends Juego implements Constantes {
                 for (int j = 0; j < 5; j++) {
                     switch (color) {
                         case 1:
-                            g.drawImage(img1.getImage(),x , y, width,height,null );
+                            g.drawImage(img1.getImage(), x, y, width, height, null);
                             break;
                         case 2:
-                            g.drawImage(img2.getImage(),x , y, width,height,null );
+                            g.drawImage(img2.getImage(), x, y, width, height, null);
                             break;
                         case 3:
-                            g.drawImage(img3.getImage(),x , y, width,height,null );
+                            g.drawImage(img3.getImage(), x, y, width, height, null);
                             break;
                         case 4:
-                            g.drawImage(img4.getImage(),x , y, width,height,null );
+                            g.drawImage(img4.getImage(), x, y, width, height, null);
                             break;
                     }
                 }
@@ -69,22 +69,22 @@ public class Grilla extends Juego implements Constantes {
     }
 
     public boolean golpeEsquinaAD(int bolaX, int bolaY) {
-        return (bolaY - 6 >= y + height - 9) && (bolaY - 6 <= y + height + 2)
-                && (bolaX - 6 >= x + width - 9) && (bolaX - 6 <= x + width + 2) && (destruido == false);
+        return (bolaY - 6 >= y + height - 9) && (bolaY - 6 <= y + height)
+                && (bolaX - 6 >= x + width - 9) && (bolaX - 6 <= x + width) && (destruido == false);
     }
 
     public boolean golpeEsquinaAI(int bolaX, int bolaY) {
-        return (bolaY - 6 >= y + height - 9) && (bolaY - 6 <= y + height + 2)
-                && (bolaX + 6 >= x - 2) && (bolaX + 6 <= x + 9) && (destruido == false);
+        return (bolaY - 6 >= y + height - 9) && (bolaY - 6 <= y + height)
+                && (bolaX + 6 >= x) && (bolaX + 6 <= x + 9) && (destruido == false);
     }
 
     public boolean golpeEsquinaArD(int bolaX, int bolaY) {
-        return (bolaY + 6 >= y - 2) && (bolaY + 6 <= y + 9) && (bolaX - 6 >= x + width - 9)
-                && (bolaX - 6 <= x + width + 2) && (destruido == false);
+        return (bolaY + 6 >= y) && (bolaY + 6 <= y + 9) && (bolaX - 6 >= x + width - 9)
+                && (bolaX - 6 <= x + width) && (destruido == false);
     }
 
     public boolean golpeEsquinaArI(int bolaX, int bolaY) {
-        return (bolaY + 6 <= y - 9) && (bolaY + 6 <= y + 2)
-                && (bolaX + 6 >= x - 2) && (bolaX + 6 <= x + 9) && (destruido == false);
+        return (bolaY + 6 <= y - 9) && (bolaY + 6 <= y)
+                && (bolaX + 6 >= x) && (bolaX + 6 <= x + 9) && (destruido == false);
     }
 }

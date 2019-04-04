@@ -7,7 +7,7 @@ import java.awt.Graphics;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-public class Informacion extends JPanel implements Constantes{
+public class Informacion extends JPanel implements Constantes {
 
     private final ImageIcon img, fondo;
     private final Font fuente;
@@ -18,7 +18,7 @@ public class Informacion extends JPanel implements Constantes{
         this.width = width;
         this.height = height;
         img = new ImageIcon(getClass().getResource("/Imagenes/Vidas.png"));
-        fondo = new ImageIcon(getClass().getResource("/Imagenes/FondoFrame.jpg"));
+        fondo = new ImageIcon(getClass().getResource("/Imagenes/FondoInfo.jpg"));
         fuente = new Font("MS Gothic", Font.BOLD, 20);
         repaint();
     }
