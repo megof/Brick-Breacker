@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import javax.swing.*;
 
 public class Jugadores extends JFrame implements ActionListener {
-    public static String Jugador="";
+    public static String Jugador="Morphen";
     private final Container contenedor;
     private final JButton Bcargar;
     private final JButton Bcancelar;

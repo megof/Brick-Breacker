@@ -53,38 +53,86 @@ public class Grilla extends Juego implements Constantes {
     }
 
     public boolean golpeArriba(int bolaX, int bolaY) {
-        return (bolaX >= x) && (bolaX <= x + width + 5) && (bolaY + 9 == y) && (destruido == false);
+        if ((bolaX >= x) && (bolaX <= x + width + 4) && (bolaY + 9 == y) && (destruido == false)) {
+            if (color < 4) {
+                color--;
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean golpeAbajo(int bolaX, int bolaY) {
-        return (bolaX >= x) && (bolaX <= x + width + 5) && (bolaY - 9 == y + height) && (destruido == false);
+        if ((bolaX >= x) && (bolaX <= x + width + 4) && (bolaY - 9 == y + height) && (destruido == false)) {
+            if (color < 4) {
+                color--;
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean golpeDerecha(int bolaX, int bolaY) {
-        return (bolaY >= y) && (bolaY <= y + height + 5) && (bolaX - 9 == x + width) && (destruido == false);
+        if ((bolaY >= y) && (bolaY <= y + height + 4) && (bolaX - 9 == x + width) && (destruido == false)) {
+            if (color < 4) {
+                color--;
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean golpeIzquierda(int bolaX, int bolaY) {
-        return (bolaY >= y) && (bolaY <= y + height + 5) && (bolaX + 9 == x) && (destruido == false);
+        if ((bolaY >= y) && (bolaY <= y + height + 4) && (bolaX + 9 == x) && (destruido == false)) {
+            if (color < 4) {
+                color--;
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean golpeEsquinaAD(int bolaX, int bolaY) {
-        return (bolaY - 6 >= y + height - 9) && (bolaY - 6 <= y + height)
-                && (bolaX - 6 >= x + width - 9) && (bolaX - 6 <= x + width) && (destruido == false);
+        if ((bolaY - 5 >= y + height - 9) && (bolaY - 5 <= y + height)
+                && (bolaX - 5 >= x + width - 9) && (bolaX - 5 <= x + width) && (destruido == false)) {
+            if (color < 4) {
+                color--;
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean golpeEsquinaAI(int bolaX, int bolaY) {
-        return (bolaY - 6 >= y + height - 9) && (bolaY - 6 <= y + height)
-                && (bolaX + 6 >= x) && (bolaX + 6 <= x + 9) && (destruido == false);
+        if ((bolaY - 5 >= y + height - 9) && (bolaY - 5 <= y + height)
+                && (bolaX + 5 >= x) && (bolaX + 5 <= x + 9) && (destruido == false)){
+            if (color < 4) {
+                color--;
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean golpeEsquinaArD(int bolaX, int bolaY) {
-        return (bolaY + 6 >= y) && (bolaY + 6 <= y + 9) && (bolaX - 6 >= x + width - 9)
-                && (bolaX - 6 <= x + width) && (destruido == false);
+        if ((bolaY + 5 >= y) && (bolaY + 5 <= y + 9) && (bolaX - 5 >= x + width - 9)
+                && (bolaX - 5 <= x + width) && (destruido == false)){
+            if (color < 4) {
+                color--;
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean golpeEsquinaArI(int bolaX, int bolaY) {
-        return (bolaY + 6 <= y - 9) && (bolaY + 6 <= y)
-                && (bolaX + 6 >= x) && (bolaX + 6 <= x + 9) && (destruido == false);
+        if ((bolaY + 5 >= y - 9) && (bolaY + 5 <= y)
+                && (bolaX + 5 >= x) && (bolaX + 5 <= x + 9) && (destruido == false)){
+            if (color < 4) {
+                color--;
+            }
+            return true;
+        }
+        return false;
     }
 }

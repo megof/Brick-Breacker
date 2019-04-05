@@ -6,6 +6,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.*;
@@ -16,6 +18,7 @@ public class Tablero extends JPanel implements Runnable, Constantes {
     private final Barra barra;
     private final Bola bola;
     private final Escucha escucha;
+    private final Fuente fuente;
     private final Grilla[][] grilla = new Grilla[7][5];
     private final Thread juego;
     private final ImageIcon img;
@@ -24,15 +27,16 @@ public class Tablero extends JPanel implements Runnable, Constantes {
 
     public Tablero(int width, int height) {
         super.setSize(width, height);
-        this.setFocusable(true);
+        setFocusable(true);
         barra = new Barra(BARRA_POS_INICIALX, BARRA_POS_INICIALY, BARRA_WIDTH, BARRA_HEIGHT);
         bola = new Bola(BOLA_POS_INICIALX, BOLA_POS_INICIALY, BOLA_RADIO, BOLA_RADIO);
+        fuente = new Fuente();
         pausa = new AtomicBoolean();
         escucha = new Escucha();
         juego = new Thread(this);
-        this.grilla();
-        this.addMouseMotionListener(escucha);
-        this.addKeyListener(escucha);
+        addMouseMotionListener(escucha);
+        addKeyListener(escucha);
+        grilla();
         juego.start();
         stop();
         pausa.set(true);
@@ -88,8 +92,8 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         if (ladriTotal == 0) {
             if (nivel == 3) {
                 pausa.set(true);
-                grilla();
                 ladriTotal = 32;
+                grilla();
                 grilla[1][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
                         ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
                         LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4);
@@ -112,6 +116,11 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         g.drawImage(img.getImage(), 0, 0, VENTANA_WIDTH, VENTANA_HEIGHT, null);
         barra.paint(g);
         bola.paint(g);
+        if (pausa.get() == true) {
+            g.setColor(Color.WHITE);
+            g.setFont(fuente.fuente());
+            g.drawString("Presione espacio para Empezar", 65, 240);
+        }
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 5; j++) {
                 grilla[i][j].paint(g);
@@ -175,68 +184,48 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 5; j++) {
                 if (grilla[i][j].golpeArriba(bola.getX() + 10, bola.getY() + 10)) {
-                    if (grilla[i][j].color != 4) {
-                        grilla[i][j].color--;
-                    }
-                    grilla[i][j].color--;
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
-
+                    break;
                 }
                 if (grilla[i][j].golpeAbajo(bola.getX() + 10, bola.getY() + 10)) {
-                    if (grilla[i][j].color != 4) {
-                        grilla[i][j].color--;
-                    }
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
                     break;
                 }
                 if (grilla[i][j].golpeDerecha(bola.getX() + 10, bola.getY() + 10)) {
-                    if (grilla[i][j].color != 4) {
-                        grilla[i][j].color--;
-                    }
                     bola.setDirX(bola.getDirX() * -1);
                     inmunidad = false;
+                    break;
                 }
                 if (grilla[i][j].golpeIzquierda(bola.getX() + 10, bola.getY() + 10)) {
-                    if (grilla[i][j].color != 4) {
-                        grilla[i][j].color--;
-                    }
                     bola.setDirX(bola.getDirX() * -1);
                     inmunidad = false;
                     break;
                 }
                 if (grilla[i][j].golpeEsquinaAD(bola.getX() + 10, bola.getY() + 10)) {
-                    if (grilla[i][j].color != 4) {
-                        grilla[i][j].color--;
-                    }
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
+                    break;
                 }
                 if (grilla[i][j].golpeEsquinaAI(bola.getX() + 10, bola.getY() + 10)) {
-                    if (grilla[i][j].color != 4) {
-                        grilla[i][j].color--;
-                    }
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
+                    break;
                 }
                 if (grilla[i][j].golpeEsquinaArD(bola.getX() + 10, bola.getY() + 10)) {
-                    if (grilla[i][j].color != 4) {
-                        grilla[i][j].color--;
-                    }
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
+                    break;
                 }
                 if (grilla[i][j].golpeEsquinaArI(bola.getX() + 10, bola.getY() + 10)) {
-                    if (grilla[i][j].color != 4) {
-                        grilla[i][j].color--;
-                    }
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
+                    break;
                 }
             }
         }
@@ -265,6 +254,23 @@ public class Tablero extends JPanel implements Runnable, Constantes {
                 bola.setX(e.getX() - (bola.width / 2));
                 repaint();
             }
+        }
+    }
+
+    public class Fuente {
+
+        private Font font;
+
+        public Font fuente() {
+            try {
+                InputStream is = getClass().getResourceAsStream("/imagenes/batmfa__.ttf");
+                font = Font.createFont(Font.TRUETYPE_FONT, is);
+            } catch (FontFormatException | IOException ex) {
+                System.err.println("batmfa__.ttf" + " No se cargo la fuente");
+                font = new Font("Arial", Font.PLAIN, 14);
+            }
+            Font tfont = font.deriveFont(Font.BOLD, 25);
+            return tfont;
         }
     }
 }
