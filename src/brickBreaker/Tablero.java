@@ -1,7 +1,6 @@
 package brickBreaker;
 
 import Final.menu;
-import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -19,7 +18,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 
-public class Tablero extends JPanel implements Runnable, Constantes {
+public final class Tablero extends JPanel implements Runnable, Constantes {
 
     private boolean inmunidad = false;
     private final Barra barra;
