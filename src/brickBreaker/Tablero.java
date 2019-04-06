@@ -83,7 +83,7 @@ public class Tablero extends JPanel implements Runnable, Constantes {
             try {
                 juego.sleep(nivel);
             } catch (InterruptedException ex) {
-//                ex.printStackTrace();
+                ex.printStackTrace();
             }
         }
     }
@@ -139,8 +139,7 @@ public class Tablero extends JPanel implements Runnable, Constantes {
         } else {
             JOptionPane.showMessageDialog(null, "su Puntaje fue de: " + puntaje);
             ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
-            menu m = new menu();
-            m.main(null);
+            menu.main(null);
             destroy();
         }
     }
