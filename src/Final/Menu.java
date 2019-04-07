@@ -13,14 +13,14 @@ import javax.swing.JOptionPane;
  *
  * @author Megof
  */
-public class menu extends javax.swing.JFrame {
+public class Menu extends javax.swing.JFrame {
 
     String Jugador;
 
     /**
      * Creates new form menu
      */
-    public menu() {
+    public Menu() {
         Jugador = Jugadores.Jugador;
         initComponents();
         setLocationRelativeTo(null);
@@ -135,8 +135,7 @@ public class menu extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Por favor seleccione un jugador");
         } else {
             this.dispose();
-            Ventana v = new Ventana();
-            v.main(null);
+            Ventana.main(null);
         }
     }//GEN-LAST:event_BtnJugarActionPerformed
 
@@ -159,20 +158,21 @@ public class menu extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new menu().setVisible(true);
+                new Menu().setVisible(true);
             }
         });
     }

@@ -88,7 +88,7 @@ public class Puntuaciones extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent evento) {
             String[] args=null;
-            menu m = new menu();
+            Menu m = new Menu();
             m.main(args);
             this.dispose();
     }

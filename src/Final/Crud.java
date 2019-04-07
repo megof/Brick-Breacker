@@ -60,14 +60,14 @@ public class Crud extends JFrame implements ActionListener {
                 } else {
                     JOptionPane.showMessageDialog(null, "Exito al crear jugador", "Exito", 1);
                     this.dispose();
-                    menu m = new menu();
+                    Menu m = new Menu();
                     m.main(null);
                 }
             }
         } else {
             //devolver a la otra ventana
             this.dispose();
-            menu m = new menu();
+            Menu m = new Menu();
             m.main(null);
         }
     }

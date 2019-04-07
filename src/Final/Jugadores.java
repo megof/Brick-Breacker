@@ -79,7 +79,7 @@ public class Jugadores extends JFrame implements ActionListener {
             if(Llista.getSelectedValue()!=null){
                 Jugador=""+Llista.getSelectedValue();
                 dispose();
-                menu m = new menu();
+                Menu m = new Menu();
                 m.main(null);
             }else{
                 JOptionPane.showMessageDialog(null, "Por favor selecciona un jugador");
@@ -88,7 +88,7 @@ public class Jugadores extends JFrame implements ActionListener {
         }else{
             //devolver a la otra ventana
             String[] args=null;
-            menu m = new menu();
+            Menu m = new Menu();
             m.main(args);
             this.dispose();
         }

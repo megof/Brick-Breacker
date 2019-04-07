@@ -26,7 +26,7 @@ public class VentanaLogo extends javax.swing.JFrame implements ActionListener {
         setResizable(false);
         delay(5500);
         this.dispose();
-        menu m = new menu();
+        Menu m = new Menu();
         m.main(null);
     }
 
