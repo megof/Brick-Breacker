@@ -1,7 +1,6 @@
 package Final;
 
 import Basededatos.Consultar;
-import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -10,13 +9,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 
 public class Jugadores extends JFrame implements ActionListener {
-    public static String Jugador="";
+    public static String Jugador="Morphen";
     private final Container contenedor;
     private final JButton Bcargar;
     private final JButton Bcancelar;
@@ -24,16 +20,25 @@ public class Jugadores extends JFrame implements ActionListener {
     private final JPanel Pcampos, Pbotones;
     private final JScrollPane Sbarra;
     private final JList Llista;
+    private final Icon save, delete;
     DefaultListModel modelo;
     ResultSet Rs;
 
     public Jugadores() {
         super("Selección de usuarios");
+<<<<<<< HEAD
         Icon save = new ImageIcon("src/Imagenes/load.PNG");
         Bcargar = new JButton("Cargar", save);
         Bcargar.addActionListener(this);
 
         Icon delete = new ImageIcon("src/Imagenes/delete.PNG");
+=======
+        save = new ImageIcon(getClass().getResource("/Imagenes/load.PNG"));
+        Bcargar = new JButton("Cargar", save);
+        Bcargar.addActionListener(this);
+
+        delete = new ImageIcon(getClass().getResource("/Imagenes/delete.PNG"));
+>>>>>>> 0bf866359d7dce78e319f377c10358cda429d062
         Bcancelar = new JButton("Cancelar", delete);
         Bcancelar.addActionListener(this);
 

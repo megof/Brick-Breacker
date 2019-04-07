@@ -2,8 +2,7 @@ package Basededatos;
 
 import com.mysql.jdbc.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+
 public class Conectar {
     private static final String Servidor="localhost";
     private static final int Puerto=3306;

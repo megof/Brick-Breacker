@@ -3,8 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/Megof/Documents/GitHub/Brick-Breacker/src/Final/menu.java</file>
             <file>file:/C:/Users/Megof/Documents/GitHub/Brick-Breacker/src/Final/CargarNivel.java</file>
+=======
+            <file>file:/C:/Users/Davii/Documents/GitHub/Brick-Breacker/src/brickBreaker/Tablero.java</file>
+            <file>file:/C:/Users/Davii/Documents/GitHub/Brick-Breacker/src/Final/VentanaLogo.java</file>
+            <file>file:/C:/Users/Davii/Documents/GitHub/Brick-Breacker/src/brickBreaker/Grilla.java</file>
+>>>>>>> 0bf866359d7dce78e319f377c10358cda429d062
         </group>
     </open-files>
 </project-private>

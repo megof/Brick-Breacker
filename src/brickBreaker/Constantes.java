@@ -4,7 +4,7 @@ public interface Constantes {
 
     public static final int VENTANA_WIDTH = 710;
     public static final int VENTANA_HEIGHT = 480;
-    public static final int VENTANA_INFO_WIDTH = 690;
+    public static final int VENTANA_INFO_WIDTH = 710;
     public static final int VENTANA_INFO_HEIGHT = 50;
 
     public static final int BOLA_RADIO = 20;

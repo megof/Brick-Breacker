@@ -9,9 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 
 public class Puntuaciones extends JFrame implements ActionListener {
@@ -24,11 +21,16 @@ public class Puntuaciones extends JFrame implements ActionListener {
     ResultSet Rs, auxiliar;
     private final String[] encabezados;
     private final String[][] contenido;
-
+    private final Icon back;
+    
     public Puntuaciones() {
         super("Selección de usuarios");
 
+<<<<<<< HEAD
         Icon back = new ImageIcon("src/Imagenes/back.PNG");
+=======
+        back = new ImageIcon(getClass().getResource("/Imagenes/back.PNG"));
+>>>>>>> 0bf866359d7dce78e319f377c10358cda429d062
         Bvolver = new JButton("Volver", back);
         Bvolver.addActionListener(this);
 
