@@ -29,11 +29,11 @@ public class Jugadores extends JFrame implements ActionListener {
 
     public Jugadores() {
         super("Selección de usuarios");
-        Icon save = new ImageIcon("img/load.PNG");
+        Icon save = new ImageIcon("src/Imagenes/load.PNG");
         Bcargar = new JButton("Cargar", save);
         Bcargar.addActionListener(this);
 
-        Icon delete = new ImageIcon("img/delete.PNG");
+        Icon delete = new ImageIcon("src/Imagenes/delete.PNG");
         Bcancelar = new JButton("Cancelar", delete);
         Bcancelar.addActionListener(this);
 

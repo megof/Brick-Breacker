@@ -38,6 +38,7 @@ public class menu extends javax.swing.JFrame {
         BtnPuntuaciones = new javax.swing.JButton();
         BtnJugadores = new javax.swing.JButton();
         BtnJugar = new javax.swing.JButton();
+        BtnNiveles = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -69,6 +70,13 @@ public class menu extends javax.swing.JFrame {
             }
         });
 
+        BtnNiveles.setText("Niveles");
+        BtnNiveles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnNivelesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -76,6 +84,7 @@ public class menu extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(100, 100, 100)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BtnNiveles)
                     .addComponent(BtnCrear)
                     .addComponent(BtnJugadores)
                     .addGroup(layout.createSequentialGroup()
@@ -95,7 +104,9 @@ public class menu extends javax.swing.JFrame {
                     .addComponent(BtnJugar))
                 .addGap(18, 18, 18)
                 .addComponent(BtnJugadores)
-                .addContainerGap(96, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(BtnNiveles)
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
         pack();
@@ -128,6 +139,11 @@ public class menu extends javax.swing.JFrame {
         }
         // TODO add your handling code here:
     }//GEN-LAST:event_BtnJugarActionPerformed
+
+    private void BtnNivelesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnNivelesActionPerformed
+        CargarNivel m =  new CargarNivel();
+        this.dispose();
+    }//GEN-LAST:event_BtnNivelesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -168,6 +184,7 @@ public class menu extends javax.swing.JFrame {
     private javax.swing.JButton BtnCrear;
     private javax.swing.JButton BtnJugadores;
     private javax.swing.JButton BtnJugar;
+    private javax.swing.JButton BtnNiveles;
     private javax.swing.JButton BtnPuntuaciones;
     // End of variables declaration//GEN-END:variables
 }
