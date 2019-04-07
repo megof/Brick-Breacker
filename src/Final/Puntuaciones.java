@@ -25,8 +25,8 @@ public class Puntuaciones extends JFrame implements ActionListener {
     
     public Puntuaciones() {
         super("Selección de usuarios");
-
-        back = new ImageIcon(getClass().getResource("/Imagenes/back.PNG"));
+        
+        back = new ImageIcon("src/Imagenes/back.PNG");
         Bvolver = new JButton("Volver", back);
         Bvolver.addActionListener(this);
 
@@ -88,7 +88,7 @@ public class Puntuaciones extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent evento) {
             String[] args=null;
-            menu m = new menu();
+            Menu m = new Menu();
             m.main(args);
             this.dispose();
     }

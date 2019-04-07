@@ -19,10 +19,12 @@ public class Crud extends JFrame implements ActionListener {
 
     public Crud() {
         super("Registro de usuarios");
-        save = new ImageIcon(getClass().getResource("/Imagenes/save.PNG"));
+        
+        save = new ImageIcon("src/Imagenes/save.PNG");
         Bcrear = new JButton("Crear", save);
         Bcrear.addActionListener(this);
-        delete = new ImageIcon(getClass().getResource("/Imagenes/delete.PNG"));
+
+        delete = new ImageIcon(getClass().getResource("/Imagenes/delete.PNG"));        
         Bcancelar = new JButton("Cancelar", delete);
         Bcancelar.addActionListener(this);
 
@@ -58,14 +60,14 @@ public class Crud extends JFrame implements ActionListener {
                 } else {
                     JOptionPane.showMessageDialog(null, "Exito al crear jugador", "Exito", 1);
                     this.dispose();
-                    menu m = new menu();
+                    Menu m = new Menu();
                     m.main(null);
                 }
             }
         } else {
             //devolver a la otra ventana
             this.dispose();
-            menu m = new menu();
+            Menu m = new Menu();
             m.main(null);
         }
     }

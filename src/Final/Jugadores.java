@@ -26,11 +26,12 @@ public class Jugadores extends JFrame implements ActionListener {
 
     public Jugadores() {
         super("Selección de usuarios");
-        save = new ImageIcon(getClass().getResource("/Imagenes/load.PNG"));
+        
+        save = new ImageIcon("src/Imagenes/load.PNG");
         Bcargar = new JButton("Cargar", save);
         Bcargar.addActionListener(this);
 
-        delete = new ImageIcon(getClass().getResource("/Imagenes/delete.PNG"));
+        delete = new ImageIcon("src/Imagenes/delete.PNG");
         Bcancelar = new JButton("Cancelar", delete);
         Bcancelar.addActionListener(this);
 
@@ -78,7 +79,7 @@ public class Jugadores extends JFrame implements ActionListener {
             if(Llista.getSelectedValue()!=null){
                 Jugador=""+Llista.getSelectedValue();
                 dispose();
-                menu m = new menu();
+                Menu m = new Menu();
                 m.main(null);
             }else{
                 JOptionPane.showMessageDialog(null, "Por favor selecciona un jugador");
@@ -87,7 +88,7 @@ public class Jugadores extends JFrame implements ActionListener {
         }else{
             //devolver a la otra ventana
             String[] args=null;
-            menu m = new menu();
+            Menu m = new Menu();
             m.main(args);
             this.dispose();
         }

@@ -13,14 +13,14 @@ import javax.swing.JOptionPane;
  *
  * @author Megof
  */
-public class menu extends javax.swing.JFrame {
+public class Menu extends javax.swing.JFrame {
 
     String Jugador;
 
     /**
      * Creates new form menu
      */
-    public menu() {
+    public Menu() {
         Jugador = Jugadores.Jugador;
         initComponents();
         setLocationRelativeTo(null);
@@ -39,6 +39,7 @@ public class menu extends javax.swing.JFrame {
         BtnPuntuaciones = new javax.swing.JButton();
         BtnJugadores = new javax.swing.JButton();
         BtnJugar = new javax.swing.JButton();
+        BtnNiveles = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -70,6 +71,13 @@ public class menu extends javax.swing.JFrame {
             }
         });
 
+        BtnNiveles.setText("Niveles");
+        BtnNiveles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnNivelesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -77,6 +85,7 @@ public class menu extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(100, 100, 100)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BtnNiveles)
                     .addComponent(BtnCrear)
                     .addComponent(BtnJugadores)
                     .addGroup(layout.createSequentialGroup()
@@ -96,7 +105,9 @@ public class menu extends javax.swing.JFrame {
                     .addComponent(BtnJugar))
                 .addGap(18, 18, 18)
                 .addComponent(BtnJugadores)
-                .addContainerGap(96, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(BtnNiveles)
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
         pack();
@@ -124,10 +135,14 @@ public class menu extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Por favor seleccione un jugador");
         } else {
             this.dispose();
-            Ventana v = new Ventana();
-            v.main(null);
+            Ventana.main(null);
         }
     }//GEN-LAST:event_BtnJugarActionPerformed
+
+    private void BtnNivelesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnNivelesActionPerformed
+        CargarNivel m =  new CargarNivel();
+        this.dispose();
+    }//GEN-LAST:event_BtnNivelesActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -143,20 +158,21 @@ public class menu extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new menu().setVisible(true);
+                new Menu().setVisible(true);
             }
         });
     }
@@ -165,6 +181,7 @@ public class menu extends javax.swing.JFrame {
     private javax.swing.JButton BtnCrear;
     private javax.swing.JButton BtnJugadores;
     private javax.swing.JButton BtnJugar;
+    private javax.swing.JButton BtnNiveles;
     private javax.swing.JButton BtnPuntuaciones;
     // End of variables declaration//GEN-END:variables
 }

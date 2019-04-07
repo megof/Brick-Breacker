@@ -1,12 +1,15 @@
 package brickBreaker;
 
-import Final.menu;
+import Final.CargarNivel;
+import Final.Menu;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
@@ -24,7 +27,8 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     private final Barra barra;
     private final Bola bola;
     private final Escucha escucha;
-    private final Grilla[][] grilla = new Grilla[7][5];
+    static final Grilla[][] grilla = new Grilla[5][7];
+    static int[][] colores = new int[5][7];
     private final Thread juego;
     private final ImageIcon img;
     private Font font;
@@ -49,7 +53,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         addMouseMotionListener(escucha);
         addKeyListener(escucha);
 
-        //se crea la grilla(ladrillos) inicial.
+        //se crea la grilla(ladrillos) inicial
         grilla();
 
         ReproducirSonido(0);
@@ -62,11 +66,12 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         img = new ImageIcon(getClass().getResource("/Imagenes/background.jpg"));
     }
 
-    //metodo para reproducir los sonidos
+    //metodo para reproducir los sonidos cuando la pelota toca la grilla, barra o pared
     public void ReproducirSonido(int audio) {
         try {
             AudioInputStream audio1 = AudioSystem.getAudioInputStream(new File("src/Sound/golpeBarra.wav").getAbsoluteFile());
             AudioInputStream audio2 = AudioSystem.getAudioInputStream(new File("src/Sound/golpeGrilla.wav").getAbsoluteFile());
+            AudioInputStream audio3 = AudioSystem.getAudioInputStream(new File("src/Sound/golpePared.wav").getAbsoluteFile());
             Clip clip = AudioSystem.getClip();
             switch (audio) {
                 case 1:
@@ -77,6 +82,10 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     clip.open(audio2);
                     clip.start();
                     break;
+                case 3:
+                    clip.open(audio3);
+                    clip.start();
+                    break;
             }
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
             System.out.println("Error al reproducir el sonido.");
@@ -85,15 +94,64 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
 
     //metodo para crear la grilla(ladrillos).
     public final void grilla() {
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 5; j++) {
-                Random random = new Random();
-                int color = random.nextInt(3) + 1;
-                grilla[i][j] = new Grilla((i * LADRILLO_WIDTH + 5),
-                        ((j * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                        LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, color);
+        if (CargarNivel.archivo == null && CargarNivel.imgInt == null) {
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 7; j++) {
+                    Random random = new Random();
+                    int color = random.nextInt(3) + 1;
+                    grilla[i][j] = new Grilla((j * LADRILLO_WIDTH + 5), ((i * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, color);
+                }
+            }
+        } else {
+            if (CargarNivel.archivo == null) {
+                CargarGrilla(CargarNivel.imgInt);
+            } else {
+                CargarGrilla(null);
             }
         }
+    }
+
+    public static void CargarGrilla(int[] Agrilla) {
+        if (Agrilla == null) {
+            ladriTotal = 0;
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(CargarNivel.archivo));
+                String linea = reader.readLine();
+                while (linea != null) {
+                    for (int i = 0; i < 5; i++) {
+                        String[] values = linea.split(",");
+                        for (int j = 0; j < values.length; j++) {
+                            colores[i][j] = Integer.parseInt(values[j]);
+                            if (Integer.parseInt(values[j]) > 0 && Integer.parseInt(values[j]) < 4) {
+                                ladriTotal++;
+                            }
+                        }
+                        linea = reader.readLine();
+                    }
+                }
+            } catch (IOException | NumberFormatException e) {
+                e.printStackTrace();
+            }
+        } else {
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 7; j++) {
+                    colores[i][j] = Agrilla[j + 7 * i];
+                    if (Integer.parseInt(Agrilla[j + 7 * i] + "") > 0 && Integer.parseInt(Agrilla[j + 7 * i] + "") < 4) {
+                        ladriTotal++;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 7; j++) {
+                grilla[i][j] = new Grilla((j * LADRILLO_WIDTH + 5), ((i * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                        LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, colores[i][j]);
+                System.out.print(colores[i][j]);
+            }
+            System.out.println("");
+        }
+
     }
 
     //metodo para iniciar el juego.
@@ -143,10 +201,10 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                 grilla[1][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
                         ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
                         LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4);
-                grilla[3][1] = new Grilla((3 * LADRILLO_WIDTH + 5),
+                grilla[1][3] = new Grilla((3 * LADRILLO_WIDTH + 5),
                         ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
                         LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4);
-                grilla[5][1] = new Grilla((5 * LADRILLO_WIDTH + 5),
+                grilla[1][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
                         ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
                         LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4);
                 nivel--;
@@ -168,8 +226,8 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             g.setFont(fuente());
             g.drawString("Presione espacio para Empezar", 65, 240);
         }
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 5; j++) {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 7; j++) {
                 grilla[i][j].paint(g);
             }
         }
@@ -187,7 +245,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         } else {
             JOptionPane.showMessageDialog(null, "su Puntaje fue de: " + puntaje);
             ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
-            menu.main(null);
+            Menu.main(null);
             destroy();
         }
     }
@@ -195,10 +253,12 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     //metodo para comparar cuando rebota en una pared o cuando pierde.
     public void rebotePared() {
         if (bola.getX() < 0 || bola.getX() > 670) {
+            ReproducirSonido(3);
             bola.setDirX(bola.getDirX() * -1);
             inmunidad = false;
         }
         if (bola.getY() == 0) {
+            ReproducirSonido(3);
             bola.setDirY(bola.getDirY() * -1);
             inmunidad = false;
         } else if (bola.getY() > 510) {
@@ -233,8 +293,8 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
 
     //metodo para comprobar cuando rebota contra la grilla(ladrillos).
     public void reboteGrilla() {
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 5; j++) {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 7; j++) {
                 if (grilla[i][j].golpeArriba(bola.getX() + 10, bola.getY() + 10)) {
                     ReproducirSonido(2);
                     bola.setDirY(bola.getDirY() * -1);
