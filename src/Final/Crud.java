@@ -19,18 +19,12 @@ public class Crud extends JFrame implements ActionListener {
 
     public Crud() {
         super("Registro de usuarios");
-<<<<<<< HEAD
-        Icon save = new ImageIcon("src/Imagenes/save.PNG");
+        
+        save = new ImageIcon("src/Imagenes/save.PNG");
         Bcrear = new JButton("Crear", save);
         Bcrear.addActionListener(this);
 
-        Icon delete = new ImageIcon("src/Imagenes/delete.PNG");
-=======
-        save = new ImageIcon(getClass().getResource("/Imagenes/save.PNG"));
-        Bcrear = new JButton("Crear", save);
-        Bcrear.addActionListener(this);
-        delete = new ImageIcon(getClass().getResource("/Imagenes/delete.PNG"));
->>>>>>> 0bf866359d7dce78e319f377c10358cda429d062
+        delete = new ImageIcon(getClass().getResource("/Imagenes/delete.PNG"));        
         Bcancelar = new JButton("Cancelar", delete);
         Bcancelar.addActionListener(this);
 

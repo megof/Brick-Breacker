@@ -140,17 +140,11 @@ public class menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_BtnJugarActionPerformed
 
-<<<<<<< HEAD
     private void BtnNivelesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnNivelesActionPerformed
         CargarNivel m =  new CargarNivel();
         this.dispose();
     }//GEN-LAST:event_BtnNivelesActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-=======
->>>>>>> 0bf866359d7dce78e319f377c10358cda429d062
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
