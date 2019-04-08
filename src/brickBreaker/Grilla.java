@@ -1,12 +1,11 @@
 package brickBreaker;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.ImageIcon;
 
 public class Grilla extends Juego implements Constantes {
 
-    int color;
+    private int color;
     private boolean destruido = false;
     private final ImageIcon img1, img2, img3, img4;
 
@@ -22,23 +21,19 @@ public class Grilla extends Juego implements Constantes {
     public void paint(Graphics g) {
         golpe();
         if (color >= 1 && color <= 4) {
-            for (int i = 0; i < 7; i++) {
-                for (int j = 0; j < 5; j++) {
-                    switch (color) {
-                        case 1:
-                            g.drawImage(img1.getImage(), x, y, width, height, null);
-                            break;
-                        case 2:
-                            g.drawImage(img2.getImage(), x, y, width, height, null);
-                            break;
-                        case 3:
-                            g.drawImage(img3.getImage(), x, y, width, height, null);
-                            break;
-                        case 4:
-                            g.drawImage(img4.getImage(), x, y, width, height, null);
-                            break;
-                    }
-                }
+            switch (color) {
+                case 1:
+                    g.drawImage(img1.getImage(), x, y, width, height, null);
+                    break;
+                case 2:
+                    g.drawImage(img2.getImage(), x, y, width, height, null);
+                    break;
+                case 3:
+                    g.drawImage(img3.getImage(), x, y, width, height, null);
+                    break;
+                case 4:
+                    g.drawImage(img4.getImage(), x, y, width, height, null);
+                    break;
             }
         }
     }
@@ -48,8 +43,15 @@ public class Grilla extends Juego implements Constantes {
             destruido = true;
             Tablero.puntaje += 50;
             color = -1;
-            Tablero.ladriTotal--;
         }
+        if(color == -1){
+            destruido = true;
+            color = -2;
+        }
+    }
+
+    public int getColor() {
+        return color;
     }
 
     public boolean golpeArriba(int bolaX, int bolaY) {
@@ -105,7 +107,7 @@ public class Grilla extends Juego implements Constantes {
 
     public boolean golpeEsquinaAI(int bolaX, int bolaY) {
         if ((bolaY - 5 >= y + height - 9) && (bolaY - 5 <= y + height)
-                && (bolaX + 5 >= x) && (bolaX + 5 <= x + 9) && (destruido == false)){
+                && (bolaX + 5 >= x) && (bolaX + 5 <= x + 9) && (destruido == false)) {
             if (color < 4) {
                 color--;
             }
@@ -116,7 +118,7 @@ public class Grilla extends Juego implements Constantes {
 
     public boolean golpeEsquinaArD(int bolaX, int bolaY) {
         if ((bolaY + 5 >= y) && (bolaY + 5 <= y + 9) && (bolaX - 5 >= x + width - 9)
-                && (bolaX - 5 <= x + width) && (destruido == false)){
+                && (bolaX - 5 <= x + width) && (destruido == false)) {
             if (color < 4) {
                 color--;
             }
@@ -127,7 +129,7 @@ public class Grilla extends Juego implements Constantes {
 
     public boolean golpeEsquinaArI(int bolaX, int bolaY) {
         if ((bolaY + 5 >= y - 9) && (bolaY + 5 <= y)
-                && (bolaX + 5 >= x) && (bolaX + 5 <= x + 9) && (destruido == false)){
+                && (bolaX + 5 >= x) && (bolaX + 5 <= x + 9) && (destruido == false)) {
             if (color < 4) {
                 color--;
             }
