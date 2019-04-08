@@ -32,7 +32,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     private final Thread juego;
     private final ImageIcon img;
     private Font font;
-    static int vidas = 3, puntaje = 0, ladriTotal = 35, nivel = 3;
+    static int vidas = 3, puntaje = 0, nivel = 3;
     static AtomicBoolean pausa;
 
     public Tablero(int width, int height) {
@@ -114,7 +114,6 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
 
     public static void CargarGrilla(int[] Agrilla) {
         if (Agrilla == null) {
-            ladriTotal = 0;
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(CargarNivel.archivo));
                 String linea = reader.readLine();
@@ -122,9 +121,10 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     for (int i = 0; i < 5; i++) {
                         String[] values = linea.split(",");
                         for (int j = 0; j < values.length; j++) {
-                            colores[i][j] = Integer.parseInt(values[j]);
-                            if (Integer.parseInt(values[j]) > 0 && Integer.parseInt(values[j]) < 4) {
-                                ladriTotal++;
+                            if (Integer.parseInt(values[j]) == 0) {
+                                colores[i][j] = -1;
+                            } else {
+                                colores[i][j] = Integer.parseInt(values[j]);
                             }
                         }
                         linea = reader.readLine();
@@ -136,9 +136,10 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         } else {
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 7; j++) {
-                    colores[i][j] = Agrilla[j + 7 * i];
-                    if (Integer.parseInt(Agrilla[j + 7 * i] + "") > 0 && Integer.parseInt(Agrilla[j + 7 * i] + "") < 4) {
-                        ladriTotal++;
+                    if (Agrilla[j + 7 * i] == 0) {
+                        colores[i][j] = -1;
+                    } else {
+                        colores[i][j] = Agrilla[j + 7 * i];
                     }
                 }
             }
@@ -151,7 +152,6 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             }
             System.out.println("");
         }
-
     }
 
     //metodo para iniciar el juego.
@@ -181,7 +181,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             rebotePared();
             reboteBarra();
             reboteGrilla();
-            ganar();
+            siguienteLvl();
             repaint();
             try {
                 juego.sleep(nivel);
@@ -192,11 +192,21 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     }
 
     //metodo para comprobar cuando se han roto todos los ladrillos y si es asi, cambia de nivel.
-    public void ganar() {
-        if (ladriTotal == 0) {
+    public boolean ganar() {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 7; j++) {
+                if (grilla[i][j].getColor() > 0 && grilla[i][j].getColor() < 4) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public void siguienteLvl() {
+        if (ganar()) {
             if (nivel == 3) {
                 pausa.set(true);
-                ladriTotal = 32;
                 grilla();
                 grilla[1][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
                         ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
@@ -210,6 +220,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                 nivel--;
                 vidas++;
                 reStart();
+
             }
         }
     }
@@ -385,11 +396,15 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         @Override
         public void mouseMoved(MouseEvent e) {
             if (pausa.get() == false) {
-                barra.setX(e.getX() - (barra.width / 2));
+                if (e.getX()+(barra.width / 2) < VENTANA_WIDTH  && e.getX()- (barra.width / 2) >  0) {
+                    barra.setX(e.getX() - (barra.width / 2));
+                }
             } else if (pausa.get() == true) {
-                barra.setX(e.getX() - (barra.width / 2));
-                bola.setX(e.getX() - (bola.width / 2));
-                repaint();
+                if (e.getX()+(barra.width / 2) < VENTANA_WIDTH  && e.getX()- (barra.width / 2) >  0) {
+                    barra.setX(e.getX() - (barra.width / 2));
+                    bola.setX(e.getX() - (bola.width / 2));
+                    repaint();
+                }
             }
         }
     }
