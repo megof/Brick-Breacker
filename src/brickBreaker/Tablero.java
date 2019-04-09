@@ -122,10 +122,6 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         }
     }
 
-    public void temporizador() {
-
-    }
-
     //metodo para crear la grilla(ladrillos).
     public final void grilla() {
         if (CargarNivel.archivo == null && CargarNivel.imgInt == null) {
@@ -344,7 +340,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     reStart();
 
                 } else if (nivel == 1) {
-//                    registrarPuntajes();
+                    registrarPuntajes();
                     gano = true;
                     repaint();
                     int opcion = JOptionPane.showConfirmDialog(null, "Quiere volver a jugar?", "BrickBreacker", 0);
@@ -360,7 +356,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     destroy();
                 }
             } else {
-//                registrarPuntajes();
+                registrarPuntajes();
                 gano = true;
                 repaint();
                 int opcion = JOptionPane.showConfirmDialog(null, "Quiere volver a jugar tu nivel personalizado?", "BrickBreacker", 0);
@@ -437,9 +433,10 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             repaint();
             stop();
         } else {
+            timer.stop();
             perder = true;
             repaint();
-//            registrarPuntajes();
+            registrarPuntajes();
             int opcion = JOptionPane.showConfirmDialog(null, "Quiere volver a jugar?", "BrickBreacker", 0);
             if (opcion == 0) {
                 ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
