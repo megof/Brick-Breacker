@@ -523,7 +523,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     reproducirSonido(2);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
-                    if (grilla[i][j].isDestruido()) {
+                    if (grilla[i][j].getColor()==0) {
                         addItem(grilla[i][j].poder);
                         puntaje += 100;
                     } else {
@@ -535,7 +535,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     reproducirSonido(2);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
-                    if (grilla[i][j].isDestruido()) {
+                    if (grilla[i][j].getColor()==0) {
                         addItem(grilla[i][j].poder);
                         puntaje += 100;
                     } else {
@@ -547,7 +547,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     reproducirSonido(2);
                     bola.setDirX(bola.getDirX() * -1);
                     inmunidad = false;
-                    if (grilla[i][j].isDestruido()) {
+                    if (grilla[i][j].getColor()==0) {
                         addItem(grilla[i][j].poder);
                         puntaje += 100;
                     } else {
@@ -559,7 +559,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     reproducirSonido(2);
                     bola.setDirX(bola.getDirX() * -1);
                     inmunidad = false;
-                    if (grilla[i][j].isDestruido()) {
+                    if (grilla[i][j].getColor()==0) {
                         addItem(grilla[i][j].poder);
                         puntaje += 100;
                     } else {
@@ -572,7 +572,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
-                    if (grilla[i][j].isDestruido()) {
+                    if (grilla[i][j].getColor()==0) {
                         addItem(grilla[i][j].poder);
                         puntaje += 100;
                     } else {
@@ -585,7 +585,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
-                    if (grilla[i][j].isDestruido()) {
+                    if (grilla[i][j].getColor()==0) {
                         addItem(grilla[i][j].poder);
                         puntaje += 100;
                     } else {
@@ -598,7 +598,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
-                    if (grilla[i][j].isDestruido()) {
+                    if (grilla[i][j].getColor()==0) {
                         addItem(grilla[i][j].poder);
                         puntaje += 100;
                     } else {
@@ -611,7 +611,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
-                    if (grilla[i][j].isDestruido()) {
+                    if (grilla[i][j].getColor()==0) {
                         addItem(grilla[i][j].poder);
                         puntaje += 100;
                     } else {
