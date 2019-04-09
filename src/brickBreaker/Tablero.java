@@ -401,20 +401,20 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         if (perder == true) {
             g.setFont(fuente(25));
             g.setColor(Color.BLACK);
-            g.drawString("Tu puntaje fue de : " + puntaje, 133, 103);
+            g.drawString("Tu puntaje fue de : " + puntaje, 143, 103);
             g.setColor(Color.WHITE);
-            g.drawString("Tu puntaje fue de : " + puntaje, 130, 100);
+            g.drawString("Tu puntaje fue de : " + puntaje, 140, 100);
             g.setFont(fuente(35));
             g.setColor(Color.BLACK);
-            g.drawString("PERDISTE!!", 183, 73);
+            g.drawString("PERDISTE!!", 216, 73);
             g.setColor(Color.WHITE);
-            g.drawString("PERDISTE!!", 180, 70);
+            g.drawString("PERDISTE!!", 213, 70);
         } else if (gano == true) {
             g.setFont(fuente(25));
             g.setColor(Color.BLACK);
-            g.drawString("Tu puntaje fue de : " + puntaje, 133, 103);
+            g.drawString("Tu puntaje fue de : " + puntaje, 143, 103);
             g.setColor(Color.WHITE);
-            g.drawString("Tu puntaje fue de : " + puntaje, 130, 100);
+            g.drawString("Tu puntaje fue de : " + puntaje, 140, 100);
             g.setFont(fuente(35));
             g.setColor(Color.BLACK);
             g.drawString("FELICITACIONES GANASTE!!", 43, 73);
