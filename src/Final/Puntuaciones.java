@@ -67,8 +67,8 @@ public class Puntuaciones extends JFrame implements ActionListener {
         }else{
             try {
                 while(Rs.next()){
-                    contenido[i][0]=obtenernombres(Integer.parseInt(Rs.getString("Partidas_Jugador1")));
-                    contenido[i][1]=Rs.getString("Partidas_Puntaje1");
+                    contenido[i][0]=obtenernombres(Integer.parseInt(Rs.getString("Partidas_Jugador")));
+                    contenido[i][1]=Rs.getString("Partidas_Puntaje");
                     contenido[i][2]=Rs.getString("Partidas_Fecha");
                     i++;
                 }

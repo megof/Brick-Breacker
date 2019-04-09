@@ -6,6 +6,7 @@
 package Final;
 
 import brickBreaker.Ventana;
+import java.time.LocalDateTime;
 import javax.swing.JOptionPane;
 
 /**
@@ -139,7 +140,7 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnJugarActionPerformed
 
     private void BtnNivelesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnNivelesActionPerformed
-        CargarNivel m =  new CargarNivel();
+        CargarNivel m = new CargarNivel();
         this.dispose();
     }//GEN-LAST:event_BtnNivelesActionPerformed
 

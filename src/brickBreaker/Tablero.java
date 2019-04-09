@@ -1,6 +1,9 @@
 package brickBreaker;
 
+import Basededatos.Consultar;
+import Basededatos.Crear;
 import Final.CargarNivel;
+import Final.Jugadores;
 import Final.Menu;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -12,6 +15,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.sound.sampled.AudioInputStream;
@@ -34,6 +40,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     private Font font;
     static int vidas = 3, puntaje = 0, nivel = 3;
     static AtomicBoolean pausa;
+    ResultSet Rs;
 
     public Tablero(int width, int height) {
         //se define el tamaño del panel.
@@ -256,8 +263,33 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         } else {
             JOptionPane.showMessageDialog(null, "su Puntaje fue de: " + puntaje);
             ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
+            registrarPuntajes();
             Menu.main(null);
             destroy();
+        }
+    }
+
+    public void registrarPuntajes() {
+        Consultar consulta = new Consultar(Jugadores.Jugador, "proyecto_jugadores", "Jugadores_Nick");
+        Rs = consulta.GetConsult();
+        String codjugador="";
+        try {
+            while (Rs.next()) {
+                codjugador = Rs.getString("Jugadores_Id");
+            }
+        } catch (SQLException ex) {
+        }
+        LocalDateTime fecha = LocalDateTime.now();
+        String fechastring = fecha.getYear() + "-" + agregarcero(fecha.getMonthValue()) + "-" + agregarcero(fecha.getDayOfMonth()) + " " + agregarcero(fecha.getHour()) + ":" + agregarcero(fecha.getMinute()) + ":" + agregarcero(fecha.getSecond());
+        Crear crear = new Crear(codjugador);
+        crear.Insertar(consulta, "Puntaje", puntaje, fechastring);
+    }
+
+    public String agregarcero(int dato) {
+        if (dato < 10) {
+            return "0" + dato;
+        } else {
+            return "" + dato;
         }
     }
 
@@ -396,11 +428,11 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         @Override
         public void mouseMoved(MouseEvent e) {
             if (pausa.get() == false) {
-                if (e.getX()+(barra.width / 2) < VENTANA_WIDTH  && e.getX()- (barra.width / 2) >  0) {
+                if (e.getX() + (barra.width / 2) < VENTANA_WIDTH && e.getX() - (barra.width / 2) > 0) {
                     barra.setX(e.getX() - (barra.width / 2));
                 }
             } else if (pausa.get() == true) {
-                if (e.getX()+(barra.width / 2) < VENTANA_WIDTH  && e.getX()- (barra.width / 2) >  0) {
+                if (e.getX() + (barra.width / 2) < VENTANA_WIDTH && e.getX() - (barra.width / 2) > 0) {
                     barra.setX(e.getX() - (barra.width / 2));
                     bola.setX(e.getX() - (bola.width / 2));
                     repaint();
