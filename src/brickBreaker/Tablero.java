@@ -63,6 +63,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         juego = new Thread(this);
         items = new ArrayList<>();
         
+        //inicializo las variables
         disparo = false;
         gano = false;
         vidas = 3;
@@ -76,8 +77,10 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
 
         //se crea la grilla(ladrillos) inicial
         grilla();
-
+        
+        //cargo los sonidos
         ReproducirSonido(0);
+        
         //se empieza el hilo y se pausa.
         juego.start();
         stop();
@@ -172,7 +175,8 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             }
         }
     }
-
+    
+    //carga la grilla(ladrillos) personalizados
     public static void CargarGrilla(int[] Agrilla) {
         if (Agrilla == null) {
             try {
@@ -214,11 +218,13 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             }
         }
     }
-
+    
+    //añade poderes al array
     public void addItem(Poderes i) {
         items.add(i);
     }
-
+    
+    //hace que los poderes empiezen a caer
     public void dropItems() {
         for (int i = 0; i < items.size(); i++) {
             Poderes tempItem = items.get(i);
@@ -227,6 +233,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         }
     }
 
+    //comprueba si ya se cogio el item para eliminarlo del array
     public void checkItemList() {
         for (int i = 0; i < items.size(); i++) {
             Poderes tempItem = items.get(i);
@@ -249,7 +256,8 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         }
         return true;
     }
-
+    
+    //comprueba si ya se gano y pasa al siguiente nivel
     public void siguienteLvl() {
         if (ganar()) {
             if (CargarNivel.archivo == null && CargarNivel.imgInt == null) {
