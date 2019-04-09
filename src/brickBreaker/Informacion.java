@@ -31,8 +31,10 @@ public class Informacion extends JPanel implements Constantes {
         g.setColor(Color.WHITE);
         g.drawString(Jugadores.Jugador, 10, 20);
         g.drawString("Score: " + Tablero.puntaje, 10, 40);
-        g.drawImage(img.getImage(), 200, 10, 30, 30, null);
-        g.drawString(" X " + Tablero.vidas, 230, 35);
+        g.drawImage(img.getImage(), 220, 10, 30, 30, null);
+        g.drawString(" X " + Tablero.vidas, 250, 35);
+        g.drawString("Tiempo restante: ", 400,20 );
+        g.drawString(""+Tablero.temporizador + " Segundos", 410,40 );
         repaint();
     }
 }

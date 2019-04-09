@@ -6,6 +6,8 @@ import Final.CargarNivel;
 import Final.Jugadores;
 import Final.Menu;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -39,8 +41,10 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     private Thread juego;
     private ImageIcon img;
     private Font font;
-    static int vidas, puntaje, nivel, municion;
+    static int vidas, puntaje, nivel, temporizador;
     static AtomicBoolean pausa;
+    private Timer timer;
+    private Listening listening;
     private ArrayList<Poderes> items;
     ResultSet Rs;
 
@@ -58,10 +62,12 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         //se crean los objetos.
         barra = new Barra(BARRA_POS_INICIALX, BARRA_POS_INICIALY, BARRA_WIDTH, BARRA_HEIGHT);
         bola = new Bola(BOLA_POS_INICIALX, BOLA_POS_INICIALY, BOLA_RADIO, BOLA_RADIO);
+        listening = new Listening();
         pausa = new AtomicBoolean();
         escucha = new Escucha();
         juego = new Thread(this);
         items = new ArrayList<>();
+        timer = new Timer(1000, listening);
 
         //inicializo las variables
         perder = false;
@@ -69,7 +75,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         vidas = 3;
         puntaje = 0;
         nivel = 3;
-        municion = 0;
+        temporizador = 300;
 
         //se añaden los escuchas.
         addMouseMotionListener(escucha);
@@ -79,7 +85,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         grilla();
 
         //cargo los sonidos
-        ReproducirSonido(0);
+        reproducirSonido(0);
 
         //se empieza el hilo y se pausa.
         juego.start();
@@ -91,7 +97,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     }
 
     //metodo para reproducir los sonidos cuando la pelota toca la grilla, barra o pared
-    public void ReproducirSonido(int audio) {
+    public void reproducirSonido(int audio) {
         try {
             AudioInputStream audio1 = AudioSystem.getAudioInputStream(new File("src/Sound/golpeBarra.wav").getAbsoluteFile());
             AudioInputStream audio2 = AudioSystem.getAudioInputStream(new File("src/Sound/golpeGrilla.wav").getAbsoluteFile());
@@ -116,6 +122,10 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         }
     }
 
+    public void temporizador() {
+
+    }
+
     //metodo para crear la grilla(ladrillos).
     public final void grilla() {
         if (CargarNivel.archivo == null && CargarNivel.imgInt == null) {
@@ -130,9 +140,9 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             }
         } else {
             if (CargarNivel.archivo == null) {
-                CargarGrilla(CargarNivel.imgInt);
+                cargarGrilla(CargarNivel.imgInt);
             } else {
-                CargarGrilla(null);
+                cargarGrilla(null);
             }
         }
     }
@@ -160,6 +170,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     @Override
     public void run() {
         while (true) {
+
             siguienteLvl();
             bola.movimiento();
             rebotePared();
@@ -180,7 +191,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     }
 
     //carga la grilla(ladrillos) personalizados
-    public static void CargarGrilla(int[] Agrilla) {
+    public static void cargarGrilla(int[] Agrilla) {
         if (Agrilla == null) {
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(CargarNivel.archivo));
@@ -263,23 +274,34 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     //comprueba si ya se gano y pasa al siguiente nivel
     public void siguienteLvl() {
         if (ganar()) {
+            timer.stop();
             if (CargarNivel.archivo == null && CargarNivel.imgInt == null) {
                 if (nivel == 3) {
-                    pausa.set(true);
-                    grilla();
-                    grilla[1][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
-                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-                    grilla[1][3] = new Grilla((3 * LADRILLO_WIDTH + 5),
-                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-                    grilla[1][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
-                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    temporizador = 250;
                     nivel--;
                     vidas++;
+                    pausa.set(true);
+                    grilla();
+                    grilla[3][0] = new Grilla((0 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[3][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[3][3] = new Grilla((3 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[3][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[3][6] = new Grilla((6 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
                     reStart();
                 } else if (nivel == 2) {
+                    temporizador = 200;
+                    nivel--;
+                    vidas++;
                     pausa.set(true);
                     grilla();
                     grilla[1][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
@@ -319,12 +341,12 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     grilla[3][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
                             ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
                             LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-                    nivel--;
-                    vidas++;
                     reStart();
+
                 } else if (nivel == 1) {
-                    registrarPuntajes();
+//                    registrarPuntajes();
                     gano = true;
+                    repaint();
                     int opcion = JOptionPane.showConfirmDialog(null, "Quiere volver a jugar?", "BrickBreacker", 0);
                     if (opcion == 0) {
                         ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
@@ -340,6 +362,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             } else {
 //                registrarPuntajes();
                 gano = true;
+                repaint();
                 int opcion = JOptionPane.showConfirmDialog(null, "Quiere volver a jugar tu nivel personalizado?", "BrickBreacker", 0);
                 if (opcion == 0) {
                     ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
@@ -357,7 +380,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         }
     }
 
-    //metodo que pinta todos los componentes del juego.
+//metodo que pinta todos los componentes del juego.
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -457,12 +480,12 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     //metodo para comparar cuando rebota en una pared o cuando pierde.
     public void rebotePared() {
         if (bola.getX() < 0 || bola.getX() > 670) {
-            ReproducirSonido(3);
+            reproducirSonido(3);
             bola.setDirX(bola.getDirX() * -1);
             inmunidad = false;
         }
         if (bola.getY() == 0) {
-            ReproducirSonido(3);
+            reproducirSonido(3);
             bola.setDirY(bola.getDirY() * -1);
             inmunidad = false;
         } else if (bola.getY() > 510) {
@@ -483,11 +506,11 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     public void reboteBarra() {
         if (inmunidad == false) {
             if (barra.golpeArriba(bola.getX(), bola.getY())) {
-                ReproducirSonido(1);
+                reproducirSonido(1);
                 bola.setDirY(bola.getDirY() * -1);
                 inmunidad = true;
             } else if (barra.golpeIzquierda(bola.getX(), bola.getY()) || barra.golpeDerecha(bola.getX(), bola.getY())) {
-                ReproducirSonido(1);
+                reproducirSonido(1);
                 bola.setDirY(bola.getDirY() * -1);
                 bola.setDirX(bola.getDirX() * -1);
                 inmunidad = true;
@@ -500,7 +523,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 7; j++) {
                 if (grilla[i][j].golpeArriba(bola.getX() + 10, bola.getY() + 10)) {
-                    ReproducirSonido(2);
+                    reproducirSonido(2);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
                     if (grilla[i][j].isDestruido()) {
@@ -512,7 +535,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     break;
                 }
                 if (grilla[i][j].golpeAbajo(bola.getX() + 10, bola.getY() + 10)) {
-                    ReproducirSonido(2);
+                    reproducirSonido(2);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
                     if (grilla[i][j].isDestruido()) {
@@ -524,7 +547,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     break;
                 }
                 if (grilla[i][j].golpeDerecha(bola.getX() + 10, bola.getY() + 10)) {
-                    ReproducirSonido(2);
+                    reproducirSonido(2);
                     bola.setDirX(bola.getDirX() * -1);
                     inmunidad = false;
                     if (grilla[i][j].isDestruido()) {
@@ -536,7 +559,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     break;
                 }
                 if (grilla[i][j].golpeIzquierda(bola.getX() + 10, bola.getY() + 10)) {
-                    ReproducirSonido(2);
+                    reproducirSonido(2);
                     bola.setDirX(bola.getDirX() * -1);
                     inmunidad = false;
                     if (grilla[i][j].isDestruido()) {
@@ -548,7 +571,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     break;
                 }
                 if (grilla[i][j].golpeEsquinaAD(bola.getX() + 10, bola.getY() + 10)) {
-                    ReproducirSonido(2);
+                    reproducirSonido(2);
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
@@ -561,7 +584,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     break;
                 }
                 if (grilla[i][j].golpeEsquinaAI(bola.getX() + 10, bola.getY() + 10)) {
-                    ReproducirSonido(2);
+                    reproducirSonido(2);
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
@@ -574,7 +597,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     break;
                 }
                 if (grilla[i][j].golpeEsquinaArD(bola.getX() + 10, bola.getY() + 10)) {
-                    ReproducirSonido(2);
+                    reproducirSonido(2);
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
@@ -587,7 +610,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     break;
                 }
                 if (grilla[i][j].golpeEsquinaArI(bola.getX() + 10, bola.getY() + 10)) {
-                    ReproducirSonido(2);
+                    reproducirSonido(2);
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
@@ -614,6 +637,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         }
         Font tfont = font.deriveFont(Font.BOLD, tam);
         return tfont;
+
     }
 
     //clase Escucha que hereda de KeyApapter el metodo keyPressed y implementa la interfaz MouseMotionListener
@@ -625,6 +649,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         public void keyPressed(KeyEvent ke) {
             int key = ke.getKeyCode();
             if (key == KeyEvent.VK_SPACE) {
+                timer.start();
                 start();
             }
         }
@@ -646,6 +671,20 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     bola.setX(e.getX() - (bola.width / 2));
                     repaint();
                 }
+            }
+        }
+    }
+
+    private class Listening implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println(temporizador);
+            temporizador--;
+            if (temporizador == 0) {
+                timer.stop();
+                vidas = 0;
+                reStart();
             }
         }
     }
