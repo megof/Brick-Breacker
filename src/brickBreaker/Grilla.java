@@ -42,9 +42,16 @@ public class Grilla extends Juego implements Constantes {
         if (color == 0) {
             destruido = true;
             Tablero.puntaje += 50;
+            int rand = (int) Math.rint(Math.random() * 10)+1;
+            if (rand == 3 && Tablero.poder=="Ninguno") {
+                Tablero.poder = "Golpe por 2";
+            } else if (rand == 7 && Tablero.poder=="Ninguno") {
+                Tablero.poder = "Inmunidad";
+                Tablero.cant=3;
+            }
             color = -1;
         }
-        if(color == -1){
+        if (color == -1) {
             destruido = true;
             color = -2;
         }
@@ -57,6 +64,10 @@ public class Grilla extends Juego implements Constantes {
     public boolean golpeArriba(int bolaX, int bolaY) {
         if ((bolaX >= x) && (bolaX <= x + width + 4) && (bolaY + 9 == y) && (destruido == false)) {
             if (color < 4) {
+                if (Tablero.poder == "Golpe por 2") {
+                    color--;
+                    Tablero.poder = "Ninguno";
+                }
                 color--;
             }
             return true;
@@ -67,6 +78,10 @@ public class Grilla extends Juego implements Constantes {
     public boolean golpeAbajo(int bolaX, int bolaY) {
         if ((bolaX >= x) && (bolaX <= x + width + 4) && (bolaY - 9 == y + height) && (destruido == false)) {
             if (color < 4) {
+                if (Tablero.poder == "Golpe por 2") {
+                    color--;
+                    Tablero.poder = "Ninguno";
+                }
                 color--;
             }
             return true;
@@ -77,6 +92,10 @@ public class Grilla extends Juego implements Constantes {
     public boolean golpeDerecha(int bolaX, int bolaY) {
         if ((bolaY >= y) && (bolaY <= y + height + 4) && (bolaX - 9 == x + width) && (destruido == false)) {
             if (color < 4) {
+                if (Tablero.poder == "Golpe por 2") {
+                    color--;
+                    Tablero.poder = "Ninguno";
+                }
                 color--;
             }
             return true;
@@ -87,6 +106,10 @@ public class Grilla extends Juego implements Constantes {
     public boolean golpeIzquierda(int bolaX, int bolaY) {
         if ((bolaY >= y) && (bolaY <= y + height + 4) && (bolaX + 9 == x) && (destruido == false)) {
             if (color < 4) {
+                if (Tablero.poder == "Golpe por 2") {
+                    color--;
+                    Tablero.poder = "Ninguno";
+                }
                 color--;
             }
             return true;
@@ -98,6 +121,10 @@ public class Grilla extends Juego implements Constantes {
         if ((bolaY - 5 >= y + height - 9) && (bolaY - 5 <= y + height)
                 && (bolaX - 5 >= x + width - 9) && (bolaX - 5 <= x + width) && (destruido == false)) {
             if (color < 4) {
+                if (Tablero.poder == "Golpe por 2") {
+                    color--;
+                    Tablero.poder = "Ninguno";
+                }
                 color--;
             }
             return true;
@@ -109,6 +136,10 @@ public class Grilla extends Juego implements Constantes {
         if ((bolaY - 5 >= y + height - 9) && (bolaY - 5 <= y + height)
                 && (bolaX + 5 >= x) && (bolaX + 5 <= x + 9) && (destruido == false)) {
             if (color < 4) {
+                if (Tablero.poder == "Golpe por 2") {
+                    color--;
+                    Tablero.poder = "Ninguno";
+                }
                 color--;
             }
             return true;
@@ -120,6 +151,10 @@ public class Grilla extends Juego implements Constantes {
         if ((bolaY + 5 >= y) && (bolaY + 5 <= y + 9) && (bolaX - 5 >= x + width - 9)
                 && (bolaX - 5 <= x + width) && (destruido == false)) {
             if (color < 4) {
+                if (Tablero.poder == "Golpe por 2") {
+                    color--;
+                    Tablero.poder = "Ninguno";
+                }
                 color--;
             }
             return true;
@@ -131,6 +166,10 @@ public class Grilla extends Juego implements Constantes {
         if ((bolaY + 5 >= y - 9) && (bolaY + 5 <= y)
                 && (bolaX + 5 >= x) && (bolaX + 5 <= x + 9) && (destruido == false)) {
             if (color < 4) {
+                if (Tablero.poder == "Golpe por 2") {
+                    color--;
+                    Tablero.poder = "Ninguno";
+                }
                 color--;
             }
             return true;

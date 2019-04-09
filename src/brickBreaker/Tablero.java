@@ -6,6 +6,8 @@ import Final.CargarNivel;
 import Final.Jugadores;
 import Final.Menu;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -20,6 +22,8 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -38,11 +42,17 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     private final Thread juego;
     private final ImageIcon img;
     private Font font;
-    static int vidas = 3, puntaje = 0, nivel = 3;
+    static int vidas = 3, puntaje = 0, nivel = 3, cant = 0, tiempo = 180;
+    private Timer temp;
+    private maje manejador;
+    static String poder = "Ninguno";
     static AtomicBoolean pausa;
     ResultSet Rs;
 
     public Tablero(int width, int height) {
+        manejador = new maje();
+        temp = new Timer(1000, manejador);
+        temp.start();
         //se define el tamaño del panel.
         super.setSize(width, height);
 
@@ -71,6 +81,18 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
 
         //imagenfondo del panel.
         img = new ImageIcon(getClass().getResource("/Imagenes/background.jpg"));
+    }
+
+    class maje implements ActionListener {
+
+        public void actionPerformed(ActionEvent eventoAccion) {
+            tiempo--;
+            System.out.println(tiempo);
+            if (tiempo == 0) {
+                vidas = 0;
+                reStart();
+            }
+        }
     }
 
     //metodo para reproducir los sonidos cuando la pelota toca la grilla, barra o pared
@@ -272,7 +294,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     public void registrarPuntajes() {
         Consultar consulta = new Consultar(Jugadores.Jugador, "proyecto_jugadores", "Jugadores_Nick");
         Rs = consulta.GetConsult();
-        String codjugador="";
+        String codjugador = "";
         try {
             while (Rs.next()) {
                 codjugador = Rs.getString("Jugadores_Id");
@@ -305,16 +327,30 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             bola.setDirY(bola.getDirY() * -1);
             inmunidad = false;
         } else if (bola.getY() > 510) {
-            pausa.set(true);
-            if (puntaje > 0) {
-                if (puntaje == 50) {
-                    puntaje -= 50;
-                } else {
-                    puntaje -= 100;
+            if (poder == "Inmunidad") {
+                ReproducirSonido(1);
+                bola.setDirY(bola.getDirY() * -1);
+                cant--;
+                if (cant == 0) {
+                    poder = "Ninguno";
                 }
+                if (inmunidad) {
+                    inmunidad = false;
+                } else {
+                    inmunidad = true;
+                }
+            } else {
+                pausa.set(true);
+                if (puntaje > 0) {
+                    if (puntaje == 50) {
+                        puntaje -= 50;
+                    } else {
+                        puntaje -= 100;
+                    }
+                }
+                vidas--;
+                reStart();
             }
-            vidas--;
-            reStart();
         }
     }
 
