@@ -40,8 +40,10 @@ public class Menu extends javax.swing.JFrame {
         BtnJugadores = new javax.swing.JButton();
         BtnJugar = new javax.swing.JButton();
         BtnNiveles = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         BtnCrear.setText("crear");
         BtnCrear.addActionListener(new java.awt.event.ActionListener() {
@@ -49,6 +51,7 @@ public class Menu extends javax.swing.JFrame {
                 BtnCrearActionPerformed(evt);
             }
         });
+        getContentPane().add(BtnCrear, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 160, -1, -1));
 
         BtnPuntuaciones.setText("puntuaciones");
         BtnPuntuaciones.addActionListener(new java.awt.event.ActionListener() {
@@ -56,6 +59,7 @@ public class Menu extends javax.swing.JFrame {
                 BtnPuntuacionesActionPerformed(evt);
             }
         });
+        getContentPane().add(BtnPuntuaciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 200, -1, -1));
 
         BtnJugadores.setText("jugadores");
         BtnJugadores.addActionListener(new java.awt.event.ActionListener() {
@@ -63,6 +67,7 @@ public class Menu extends javax.swing.JFrame {
                 BtnJugadoresActionPerformed(evt);
             }
         });
+        getContentPane().add(BtnJugadores, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 240, -1, -1));
 
         BtnJugar.setText("Jugar");
         BtnJugar.addActionListener(new java.awt.event.ActionListener() {
@@ -70,6 +75,7 @@ public class Menu extends javax.swing.JFrame {
                 BtnJugarActionPerformed(evt);
             }
         });
+        getContentPane().add(BtnJugar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 80, -1, -1));
 
         BtnNiveles.setText("Niveles");
         BtnNiveles.addActionListener(new java.awt.event.ActionListener() {
@@ -77,38 +83,10 @@ public class Menu extends javax.swing.JFrame {
                 BtnNivelesActionPerformed(evt);
             }
         });
+        getContentPane().add(BtnNiveles, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 120, -1, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(100, 100, 100)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(BtnNiveles)
-                    .addComponent(BtnCrear)
-                    .addComponent(BtnJugadores)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(BtnPuntuaciones)
-                        .addGap(42, 42, 42)
-                        .addComponent(BtnJugar)))
-                .addContainerGap(102, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(106, 106, 106)
-                .addComponent(BtnCrear)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BtnPuntuaciones)
-                    .addComponent(BtnJugar))
-                .addGap(18, 18, 18)
-                .addComponent(BtnJugadores)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(BtnNiveles)
-                .addContainerGap(62, Short.MAX_VALUE))
-        );
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/FondoFrame.jpg"))); // NOI18N
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 300));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -183,5 +161,6 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JButton BtnJugar;
     private javax.swing.JButton BtnNiveles;
     private javax.swing.JButton BtnPuntuaciones;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
