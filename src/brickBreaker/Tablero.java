@@ -15,13 +15,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-<<<<<<< HEAD
 import java.util.ArrayList;
-=======
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
->>>>>>> 64e84a50d6a4e43a6f1aa1279b9f215acfef22ca
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.sound.sampled.AudioInputStream;
@@ -44,11 +41,8 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     private Font font;
     static int vidas, puntaje, nivel, municion;
     static AtomicBoolean pausa;
-<<<<<<< HEAD
     private ArrayList<Poderes> items;
-=======
     ResultSet Rs;
->>>>>>> 64e84a50d6a4e43a6f1aa1279b9f215acfef22ca
 
     public Tablero(int width, int height) {
         //se define el tamaño del panel.
@@ -389,7 +383,6 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             stop();
         } else {
             JOptionPane.showMessageDialog(null, "su Puntaje fue de: " + puntaje);
-<<<<<<< HEAD
             int opcion = JOptionPane.showConfirmDialog(null, "Quiere volver a jugar?", "BrickBreacker", 0);
             if (opcion == 0) {
                 ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
@@ -400,13 +393,10 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                 Menu.main(null);
                 destroy();
             }
-
-=======
             ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
             registrarPuntajes();
             Menu.main(null);
             destroy();
->>>>>>> 64e84a50d6a4e43a6f1aa1279b9f215acfef22ca
         }
     }
 
