@@ -23,12 +23,11 @@ public class Consultar {
                 consulta="Select * From "+tabla+" where "+dato+" ='"+Jugador+"'";
             }
         }else{
-            consulta="Select * from "+tabla+" ORDER BY Partidas_Puntaje1 DESC LIMIT 5";
+            consulta="Select * from "+tabla+" ORDER BY Partidas_Puntaje DESC LIMIT 5";
         }
         if(Conexion!=null){
             try {
                 Ps = Conexion.prepareStatement(consulta);
-                System.out.println(Ps);
                 Rs = Ps.executeQuery();
             } catch (Exception e) {}
             return Rs;
