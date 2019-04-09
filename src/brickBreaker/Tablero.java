@@ -30,7 +30,7 @@ import javax.swing.*;
 
 public final class Tablero extends JPanel implements Runnable, Constantes {
 
-    private boolean inmunidad = false, gano, disparo;
+    private boolean inmunidad = false, gano, perder;
     private Barra barra;
     private Bola bola;
     private Escucha escucha;
@@ -62,9 +62,9 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         escucha = new Escucha();
         juego = new Thread(this);
         items = new ArrayList<>();
-        
+
         //inicializo las variables
-        disparo = false;
+        perder = false;
         gano = false;
         vidas = 3;
         puntaje = 0;
@@ -77,10 +77,10 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
 
         //se crea la grilla(ladrillos) inicial
         grilla();
-        
+
         //cargo los sonidos
         ReproducirSonido(0);
-        
+
         //se empieza el hilo y se pausa.
         juego.start();
         stop();
@@ -163,8 +163,11 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             siguienteLvl();
             bola.movimiento();
             rebotePared();
-            reboteBarra();
-            reboteGrilla();
+            if (bola.getY() > 400) {
+                reboteBarra();
+            } else if (bola.getY() < 250) {
+                reboteGrilla();
+            }
             dropItems();
             checkItemList();
             repaint();
@@ -175,7 +178,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             }
         }
     }
-    
+
     //carga la grilla(ladrillos) personalizados
     public static void CargarGrilla(int[] Agrilla) {
         if (Agrilla == null) {
@@ -218,12 +221,12 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             }
         }
     }
-    
+
     //añade poderes al array
     public void addItem(Poderes i) {
         items.add(i);
     }
-    
+
     //hace que los poderes empiezen a caer
     public void dropItems() {
         for (int i = 0; i < items.size(); i++) {
@@ -256,7 +259,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         }
         return true;
     }
-    
+
     //comprueba si ya se gano y pasa al siguiente nivel
     public void siguienteLvl() {
         if (ganar()) {
@@ -320,6 +323,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     vidas++;
                     reStart();
                 } else if (nivel == 1) {
+                    registrarPuntajes();
                     gano = true;
                     int opcion = JOptionPane.showConfirmDialog(null, "Quiere volver a jugar?", "BrickBreacker", 0);
                     if (opcion == 0) {
@@ -334,6 +338,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     destroy();
                 }
             } else {
+//                registrarPuntajes();
                 gano = true;
                 int opcion = JOptionPane.showConfirmDialog(null, "Quiere volver a jugar tu nivel personalizado?", "BrickBreacker", 0);
                 if (opcion == 0) {
@@ -352,20 +357,21 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         }
     }
 
-   
     //metodo que pinta todos los componentes del juego.
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(img.getImage(), 0, 0, VENTANA_WIDTH, VENTANA_HEIGHT, null);
-        g.setColor(Color.WHITE);
-        g.setFont(fuente(25));
         barra.paint(g);
         bola.paint(g);
         for (Poderes i : items) {
             i.draw(g);
         }
-        if (pausa.get() == true && gano == false) {
+        if (pausa.get() == true && gano == false && perder == false) {
+            g.setFont(fuente(25));
+            g.setColor(Color.BLACK);
+            g.drawString("Presione espacio para Empezar", 68, 243);
+            g.setColor(Color.WHITE);
             g.drawString("Presione espacio para Empezar", 65, 240);
         }
         for (int i = 0; i < 5; i++) {
@@ -373,10 +379,28 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                 grilla[i][j].paint(g);
             }
         }
-        if (gano == true) {
-            g.drawString("Tu puntaje fue de : " + puntaje, 130, 240);
+        if (perder == true) {
+            g.setFont(fuente(25));
+            g.setColor(Color.BLACK);
+            g.drawString("Tu puntaje fue de : " + puntaje, 133, 103);
+            g.setColor(Color.WHITE);
+            g.drawString("Tu puntaje fue de : " + puntaje, 130, 100);
             g.setFont(fuente(35));
-            g.drawString("FELICITACIONES GANASTE!!", 40, 200);
+            g.setColor(Color.BLACK);
+            g.drawString("PERDISTE!!", 183, 73);
+            g.setColor(Color.WHITE);
+            g.drawString("PERDISTE!!", 180, 70);
+        } else if (gano == true) {
+            g.setFont(fuente(25));
+            g.setColor(Color.BLACK);
+            g.drawString("Tu puntaje fue de : " + puntaje, 133, 103);
+            g.setColor(Color.WHITE);
+            g.drawString("Tu puntaje fue de : " + puntaje, 130, 100);
+            g.setFont(fuente(35));
+            g.setColor(Color.BLACK);
+            g.drawString("FELICITACIONES GANASTE!!", 43, 73);
+            g.setColor(Color.WHITE);
+            g.drawString("FELICITACIONES GANASTE!!", 40, 70);
         }
     }
 
@@ -390,7 +414,9 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             repaint();
             stop();
         } else {
-            JOptionPane.showMessageDialog(null, "su Puntaje fue de: " + puntaje);
+            perder = true;
+            repaint();
+//            registrarPuntajes();
             int opcion = JOptionPane.showConfirmDialog(null, "Quiere volver a jugar?", "BrickBreacker", 0);
             if (opcion == 0) {
                 ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
@@ -401,17 +427,13 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                 Menu.main(null);
                 destroy();
             }
-            ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
-            registrarPuntajes();
-            Menu.main(null);
-            destroy();
         }
     }
 
     public void registrarPuntajes() {
         Consultar consulta = new Consultar(Jugadores.Jugador, "proyecto_jugadores", "Jugadores_Nick");
         Rs = consulta.GetConsult();
-        String codjugador="";
+        String codjugador = "";
         try {
             while (Rs.next()) {
                 codjugador = Rs.getString("Jugadores_Id");
@@ -602,7 +624,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         @Override
         public void keyPressed(KeyEvent ke) {
             int key = ke.getKeyCode();
-            if (key == KeyEvent.VK_SPACE && pausa.equals(true)) {
+            if (key == KeyEvent.VK_SPACE) {
                 start();
             }
         }
