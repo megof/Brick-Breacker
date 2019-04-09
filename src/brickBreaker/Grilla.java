@@ -7,15 +7,18 @@ public class Grilla extends Juego implements Constantes {
 
     private int color;
     private boolean destruido = false;
+    public Poderes poder;
     private final ImageIcon img1, img2, img3, img4;
 
-    public Grilla(int x, int y, int width, int height, int color) {
+    public Grilla(int x, int y, int width, int height, int color, int tipoItem) {
         super(x, y, width, height);
         this.color = color;
         img1 = new ImageIcon(getClass().getResource("/Imagenes/Ladrillo1.png"));
         img2 = new ImageIcon(getClass().getResource("/Imagenes/Ladrillo2.png"));
         img3 = new ImageIcon(getClass().getResource("/Imagenes/Ladrillo3.png"));
         img4 = new ImageIcon(getClass().getResource("/Imagenes/Ladrillo4.png"));
+
+        poder = new Poderes(x + (width / 4), y + (height / 4), 20, 20, tipoItem);
     }
 
     public void paint(Graphics g) {
@@ -41,13 +44,16 @@ public class Grilla extends Juego implements Constantes {
     public void golpe() {
         if (color == 0) {
             destruido = true;
-            Tablero.puntaje += 50;
             color = -1;
         }
-        if(color == -1){
+        if (color == -1) {
             destruido = true;
             color = -2;
         }
+    }
+
+    public boolean isDestruido() {
+        return destruido;
     }
 
     public int getColor() {
@@ -117,8 +123,8 @@ public class Grilla extends Juego implements Constantes {
     }
 
     public boolean golpeEsquinaArD(int bolaX, int bolaY) {
-        if ((bolaY + 5 >= y) && (bolaY + 5 <= y + 9) && (bolaX - 5 >= x + width - 9)
-                && (bolaX - 5 <= x + width) && (destruido == false)) {
+        if ((bolaY + 5 >= y) && (bolaY + 5 <= y + 9) && 
+                (bolaX - 5 >= x + width - 9) && (bolaX - 5 <= x + width) && (destruido == false)) {
             if (color < 4) {
                 color--;
             }
@@ -128,7 +134,7 @@ public class Grilla extends Juego implements Constantes {
     }
 
     public boolean golpeEsquinaArI(int bolaX, int bolaY) {
-        if ((bolaY + 5 >= y - 9) && (bolaY + 5 <= y)
+        if ((bolaY + 5 >= y + 9) && (bolaY + 5 <= y)
                 && (bolaX + 5 >= x) && (bolaX + 5 <= x + 9) && (destruido == false)) {
             if (color < 4) {
                 color--;

@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.sound.sampled.AudioInputStream;
@@ -23,17 +24,18 @@ import javax.swing.*;
 
 public final class Tablero extends JPanel implements Runnable, Constantes {
 
-    private boolean inmunidad = false;
-    private final Barra barra;
-    private final Bola bola;
-    private final Escucha escucha;
-    static final Grilla[][] grilla = new Grilla[5][7];
+    private boolean inmunidad = false, gano, disparo;
+    private Barra barra;
+    private Bola bola;
+    private Escucha escucha;
+    static Grilla[][] grilla = new Grilla[5][7];
     static int[][] colores = new int[5][7];
-    private final Thread juego;
-    private final ImageIcon img;
+    private Thread juego;
+    private ImageIcon img;
     private Font font;
-    static int vidas = 3, puntaje = 0, nivel = 3;
+    static int vidas, puntaje, nivel, municion;
     static AtomicBoolean pausa;
+    private ArrayList<Poderes> items;
 
     public Tablero(int width, int height) {
         //se define el tamaño del panel.
@@ -42,12 +44,24 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         //permite los escuchas en el panel
         setFocusable(true);
 
+        comenzar();
+    }
+
+    public void comenzar() {
         //se crean los objetos.
         barra = new Barra(BARRA_POS_INICIALX, BARRA_POS_INICIALY, BARRA_WIDTH, BARRA_HEIGHT);
         bola = new Bola(BOLA_POS_INICIALX, BOLA_POS_INICIALY, BOLA_RADIO, BOLA_RADIO);
         pausa = new AtomicBoolean();
         escucha = new Escucha();
         juego = new Thread(this);
+        items = new ArrayList<>();
+        
+        disparo = false;
+        gano = false;
+        vidas = 3;
+        puntaje = 0;
+        nivel = 3;
+        municion = 0;
 
         //se añaden los escuchas.
         addMouseMotionListener(escucha);
@@ -99,8 +113,9 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                 for (int j = 0; j < 7; j++) {
                     Random random = new Random();
                     int color = random.nextInt(3) + 1;
+                    int poder = random.nextInt(5) + 1;
                     grilla[i][j] = new Grilla((j * LADRILLO_WIDTH + 5), ((i * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, color);
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, color, poder);
                 }
             }
         } else {
@@ -108,6 +123,45 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                 CargarGrilla(CargarNivel.imgInt);
             } else {
                 CargarGrilla(null);
+            }
+        }
+    }
+
+    //metodo para iniciar el juego.
+    public void start() {
+        juego.resume();
+        pausa.set(false);
+    }
+
+    //metodo para pausar el juego.
+    public final void stop() {
+        juego.suspend();
+    }
+
+    //metodo para que el hilo deje de correr.
+    public void destroy() {
+        juego.resume();
+        pausa.set(false);
+        juego.stop();
+        pausa.set(true);
+    }
+
+    //metodo para inciar el hilo de la interfaz runnable.
+    @Override
+    public void run() {
+        while (true) {
+            siguienteLvl();
+            bola.movimiento();
+            rebotePared();
+            reboteBarra();
+            reboteGrilla();
+            dropItems();
+            checkItemList();
+            repaint();
+            try {
+                juego.sleep(nivel);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
             }
         }
     }
@@ -146,47 +200,33 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         }
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 7; j++) {
+                Random random = new Random();
+                int poder = random.nextInt(5) + 1;
                 grilla[i][j] = new Grilla((j * LADRILLO_WIDTH + 5), ((i * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                        LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, colores[i][j]);
-                System.out.print(colores[i][j]);
+                        LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, colores[i][j], poder);
             }
-            System.out.println("");
         }
     }
 
-    //metodo para iniciar el juego.
-    public void start() {
-        juego.resume();
-        pausa.set(false);
+    public void addItem(Poderes i) {
+        items.add(i);
     }
 
-    //metodo para pausar el juego.
-    public final void stop() {
-        juego.suspend();
+    public void dropItems() {
+        for (int i = 0; i < items.size(); i++) {
+            Poderes tempItem = items.get(i);
+            tempItem.drop();
+            items.set(i, tempItem);
+        }
     }
 
-    //metodo para que el hilo deje de correr.
-    public void destroy() {
-        juego.resume();
-        pausa.set(false);
-        juego.stop();
-        pausa.set(true);
-    }
-
-    //metodo para inciar el hilo de la interfaz runnable.
-    @Override
-    public void run() {
-        while (true) {
-            bola.movimiento();
-            rebotePared();
-            reboteBarra();
-            reboteGrilla();
-            siguienteLvl();
-            repaint();
-            try {
-                juego.sleep(nivel);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
+    public void checkItemList() {
+        for (int i = 0; i < items.size(); i++) {
+            Poderes tempItem = items.get(i);
+            if (barra.caughtItem(tempItem)) {
+                items.remove(i);
+            } else if (tempItem.getY() > VENTANA_HEIGHT) {
+                items.remove(i);
             }
         }
     }
@@ -205,42 +245,123 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
 
     public void siguienteLvl() {
         if (ganar()) {
-            if (nivel == 3) {
-                pausa.set(true);
-                grilla();
-                grilla[1][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
-                        ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                        LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4);
-                grilla[1][3] = new Grilla((3 * LADRILLO_WIDTH + 5),
-                        ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                        LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4);
-                grilla[1][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
-                        ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                        LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4);
-                nivel--;
-                vidas++;
-                reStart();
+            if (CargarNivel.archivo == null && CargarNivel.imgInt == null) {
+                if (nivel == 3) {
+                    pausa.set(true);
+                    grilla();
+                    grilla[1][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
+                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[1][3] = new Grilla((3 * LADRILLO_WIDTH + 5),
+                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[1][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
+                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    nivel--;
+                    vidas++;
+                    reStart();
+                } else if (nivel == 2) {
+                    pausa.set(true);
+                    grilla();
+                    grilla[1][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
+                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[1][2] = new Grilla((2 * LADRILLO_WIDTH + 5),
+                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[2][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
+                            ((2 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[2][2] = new Grilla((2 * LADRILLO_WIDTH + 5),
+                            ((2 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[3][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[3][2] = new Grilla((2 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
 
+                    grilla[1][4] = new Grilla((4 * LADRILLO_WIDTH + 5),
+                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[1][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
+                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[2][4] = new Grilla((4 * LADRILLO_WIDTH + 5),
+                            ((2 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[2][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
+                            ((2 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[3][4] = new Grilla((4 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[3][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    nivel--;
+                    vidas++;
+                    reStart();
+                } else if (nivel == 1) {
+                    gano = true;
+                    int opcion = JOptionPane.showConfirmDialog(null, "Quiere volver a jugar?", "BrickBreacker", 0);
+                    if (opcion == 0) {
+                        ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
+                        Ventana.main(null);
+                        destroy();
+                    } else {
+                        ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
+                        Menu.main(null);
+                        destroy();
+                    }
+                    destroy();
+                }
+            } else {
+                gano = true;
+                int opcion = JOptionPane.showConfirmDialog(null, "Quiere volver a jugar tu nivel personalizado?", "BrickBreacker", 0);
+                if (opcion == 0) {
+                    ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
+                    Ventana.main(null);
+                    destroy();
+                } else {
+                    ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
+                    CargarNivel.archivo = null;
+                    CargarNivel.imgInt = null;
+                    Menu.main(null);
+                    destroy();
+                }
+                destroy();
             }
         }
     }
 
+   
     //metodo que pinta todos los componentes del juego.
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(img.getImage(), 0, 0, VENTANA_WIDTH, VENTANA_HEIGHT, null);
+        g.setColor(Color.WHITE);
+        g.setFont(fuente(25));
         barra.paint(g);
         bola.paint(g);
-        if (pausa.get() == true) {
-            g.setColor(Color.WHITE);
-            g.setFont(fuente());
+        for (Poderes i : items) {
+            i.draw(g);
+        }
+        if (pausa.get() == true && gano == false) {
             g.drawString("Presione espacio para Empezar", 65, 240);
         }
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 7; j++) {
                 grilla[i][j].paint(g);
             }
+        }
+        if (gano == true) {
+            g.drawString("Tu puntaje fue de : " + puntaje, 130, 240);
+            g.setFont(fuente(35));
+            g.drawString("FELICITACIONES GANASTE!!", 40, 200);
         }
     }
 
@@ -255,9 +376,17 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             stop();
         } else {
             JOptionPane.showMessageDialog(null, "su Puntaje fue de: " + puntaje);
-            ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
-            Menu.main(null);
-            destroy();
+            int opcion = JOptionPane.showConfirmDialog(null, "Quiere volver a jugar?", "BrickBreacker", 0);
+            if (opcion == 0) {
+                ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
+                Ventana.main(null);
+                destroy();
+            } else {
+                ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
+                Menu.main(null);
+                destroy();
+            }
+
         }
     }
 
@@ -310,24 +439,48 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     ReproducirSonido(2);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
+                    if (grilla[i][j].isDestruido()) {
+                        addItem(grilla[i][j].poder);
+                        puntaje += 100;
+                    } else {
+                        puntaje += 50;
+                    }
                     break;
                 }
                 if (grilla[i][j].golpeAbajo(bola.getX() + 10, bola.getY() + 10)) {
                     ReproducirSonido(2);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
+                    if (grilla[i][j].isDestruido()) {
+                        addItem(grilla[i][j].poder);
+                        puntaje += 100;
+                    } else {
+                        puntaje += 50;
+                    }
                     break;
                 }
                 if (grilla[i][j].golpeDerecha(bola.getX() + 10, bola.getY() + 10)) {
                     ReproducirSonido(2);
                     bola.setDirX(bola.getDirX() * -1);
                     inmunidad = false;
+                    if (grilla[i][j].isDestruido()) {
+                        addItem(grilla[i][j].poder);
+                        puntaje += 100;
+                    } else {
+                        puntaje += 50;
+                    }
                     break;
                 }
                 if (grilla[i][j].golpeIzquierda(bola.getX() + 10, bola.getY() + 10)) {
                     ReproducirSonido(2);
                     bola.setDirX(bola.getDirX() * -1);
                     inmunidad = false;
+                    if (grilla[i][j].isDestruido()) {
+                        addItem(grilla[i][j].poder);
+                        puntaje += 100;
+                    } else {
+                        puntaje += 50;
+                    }
                     break;
                 }
                 if (grilla[i][j].golpeEsquinaAD(bola.getX() + 10, bola.getY() + 10)) {
@@ -335,6 +488,12 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
+                    if (grilla[i][j].isDestruido()) {
+                        addItem(grilla[i][j].poder);
+                        puntaje += 100;
+                    } else {
+                        puntaje += 50;
+                    }
                     break;
                 }
                 if (grilla[i][j].golpeEsquinaAI(bola.getX() + 10, bola.getY() + 10)) {
@@ -342,6 +501,12 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
+                    if (grilla[i][j].isDestruido()) {
+                        addItem(grilla[i][j].poder);
+                        puntaje += 100;
+                    } else {
+                        puntaje += 50;
+                    }
                     break;
                 }
                 if (grilla[i][j].golpeEsquinaArD(bola.getX() + 10, bola.getY() + 10)) {
@@ -349,6 +514,12 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
+                    if (grilla[i][j].isDestruido()) {
+                        addItem(grilla[i][j].poder);
+                        puntaje += 100;
+                    } else {
+                        puntaje += 50;
+                    }
                     break;
                 }
                 if (grilla[i][j].golpeEsquinaArI(bola.getX() + 10, bola.getY() + 10)) {
@@ -356,6 +527,12 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
+                    if (grilla[i][j].isDestruido()) {
+                        addItem(grilla[i][j].poder);
+                        puntaje += 100;
+                    } else {
+                        puntaje += 50;
+                    }
                     break;
                 }
             }
@@ -363,7 +540,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     }
 
     //metodo para cambiar la fuente a una personalizada y si no la encuentra la fuente arial.
-    public Font fuente() {
+    public Font fuente(int tam) {
         try {
             InputStream is = getClass().getResourceAsStream("/imagenes/batmfa__.ttf");
             font = Font.createFont(Font.TRUETYPE_FONT, is);
@@ -371,7 +548,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             System.err.println("batmfa__.ttf" + " No se cargo la fuente");
             font = new Font("Arial", Font.PLAIN, 14);
         }
-        Font tfont = font.deriveFont(Font.BOLD, 25);
+        Font tfont = font.deriveFont(Font.BOLD, tam);
         return tfont;
     }
 
@@ -383,7 +560,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         @Override
         public void keyPressed(KeyEvent ke) {
             int key = ke.getKeyCode();
-            if (key == KeyEvent.VK_SPACE) {
+            if (key == KeyEvent.VK_SPACE && pausa.equals(true)) {
                 start();
             }
         }
@@ -396,11 +573,11 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         @Override
         public void mouseMoved(MouseEvent e) {
             if (pausa.get() == false) {
-                if (e.getX()+(barra.width / 2) < VENTANA_WIDTH  && e.getX()- (barra.width / 2) >  0) {
+                if (e.getX() + (barra.width / 2) < VENTANA_WIDTH && e.getX() - (barra.width / 2) > 0) {
                     barra.setX(e.getX() - (barra.width / 2));
                 }
             } else if (pausa.get() == true) {
-                if (e.getX()+(barra.width / 2) < VENTANA_WIDTH  && e.getX()- (barra.width / 2) >  0) {
+                if (e.getX() + (barra.width / 2) < VENTANA_WIDTH && e.getX() - (barra.width / 2) > 0) {
                     barra.setX(e.getX() - (barra.width / 2));
                     bola.setX(e.getX() - (bola.width / 2));
                     repaint();
