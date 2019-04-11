@@ -17,54 +17,69 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+
 import javax.swing.*;
 
 public final class Tablero extends JPanel implements Runnable, Constantes {
 
-    private boolean inmunidad = false;
-    private final Barra barra;
-    private final Bola bola;
-    private final Escucha escucha;
-    static final Grilla[][] grilla = new Grilla[5][7];
+    private boolean inmunidad = false, gano, perder;
+    public static boolean dobleGolpe;
+    private Barra barra;
+    private Bola bola;
+    private Escucha escucha;
+    static Grilla[][] grilla = new Grilla[5][7];
     static int[][] colores = new int[5][7];
-    private final Thread juego;
-    private final ImageIcon img;
+    private Thread juego;
+    private ImageIcon img;
     private Font font;
-    static int vidas = 3, puntaje = 0, nivel = 3, cant = 0, tiempo = 180;
-    private Timer temp;
-    private maje manejador;
-    static String poder = "Ninguno";
+    static int vidas, puntaje, nivel, temporizador, inmunidadVida;
     static AtomicBoolean pausa;
+    private Timer timer;
+    private Listening listening;
+    private ArrayList<Poderes> items;
     ResultSet Rs;
 
     public Tablero(int width, int height) {
-        manejador = new maje();
-        temp = new Timer(1000, manejador);
-        temp.start();
         //se define el tamaño del panel.
         super.setSize(width, height);
 
         //permite los escuchas en el panel
         setFocusable(true);
 
+        comenzar();
+    }
+
+    public void comenzar() {
         //se crean los objetos.
         barra = new Barra(BARRA_POS_INICIALX, BARRA_POS_INICIALY, BARRA_WIDTH, BARRA_HEIGHT);
         bola = new Bola(BOLA_POS_INICIALX, BOLA_POS_INICIALY, BOLA_RADIO, BOLA_RADIO);
+        listening = new Listening();
         pausa = new AtomicBoolean();
         escucha = new Escucha();
         juego = new Thread(this);
+        items = new ArrayList<>();
+        timer = new Timer(1000, listening);
+
+        //inicializo las variables
+        dobleGolpe = false;
+        perder = false;
+        gano = false;
+        inmunidadVida = 0;
+        vidas = 3;
+        puntaje = 0;
+        nivel = 3;
+        temporizador = 300;
 
         //se añaden los escuchas.
         addMouseMotionListener(escucha);
@@ -73,7 +88,9 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         //se crea la grilla(ladrillos) inicial
         grilla();
 
-        ReproducirSonido(0);
+        //cargo los sonidos
+        reproducirSonido(0);
+
         //se empieza el hilo y se pausa.
         juego.start();
         stop();
@@ -83,20 +100,8 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         img = new ImageIcon(getClass().getResource("/Imagenes/background.jpg"));
     }
 
-    class maje implements ActionListener {
-
-        public void actionPerformed(ActionEvent eventoAccion) {
-            tiempo--;
-            System.out.println(tiempo);
-            if (tiempo == 0) {
-                vidas = 0;
-                reStart();
-            }
-        }
-    }
-
     //metodo para reproducir los sonidos cuando la pelota toca la grilla, barra o pared
-    public void ReproducirSonido(int audio) {
+    public void reproducirSonido(int audio) {
         try {
             AudioInputStream audio1 = AudioSystem.getAudioInputStream(new File("src/Sound/golpeBarra.wav").getAbsoluteFile());
             AudioInputStream audio2 = AudioSystem.getAudioInputStream(new File("src/Sound/golpeGrilla.wav").getAbsoluteFile());
@@ -128,20 +133,65 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                 for (int j = 0; j < 7; j++) {
                     Random random = new Random();
                     int color = random.nextInt(3) + 1;
+                    int poder = random.nextInt(15) + 1;
                     grilla[i][j] = new Grilla((j * LADRILLO_WIDTH + 5), ((i * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, color);
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, color, poder);
                 }
             }
         } else {
             if (CargarNivel.archivo == null) {
-                CargarGrilla(CargarNivel.imgInt);
+                cargarGrilla(CargarNivel.imgInt);
             } else {
-                CargarGrilla(null);
+                cargarGrilla(null);
             }
         }
     }
 
-    public static void CargarGrilla(int[] Agrilla) {
+    //metodo para iniciar el juego.
+    public void start() {
+        juego.resume();
+        pausa.set(false);
+    }
+
+    //metodo para pausar el juego.
+    public final void stop() {
+        juego.suspend();
+    }
+
+    //metodo para que el hilo deje de correr.
+    public void destroy() {
+        juego.resume();
+        pausa.set(false);
+        juego.stop();
+        pausa.set(true);
+    }
+
+    //metodo para inciar el hilo de la interfaz runnable.
+    @Override
+    public void run() {
+        while (true) {
+
+            siguienteLvl();
+            bola.movimiento();
+            rebotePared();
+            if (bola.getY() > 400) {
+                reboteBarra();
+            } else if (bola.getY() < 250) {
+                reboteGrilla();
+            }
+            dropItems();
+            checkItemList();
+            repaint();
+            try {
+                juego.sleep(nivel);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    //carga la grilla(ladrillos) personalizados
+    public static void cargarGrilla(int[] Agrilla) {
         if (Agrilla == null) {
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(CargarNivel.archivo));
@@ -175,47 +225,36 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         }
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 7; j++) {
+                Random random = new Random();
+                int poder = random.nextInt(15) + 1;
                 grilla[i][j] = new Grilla((j * LADRILLO_WIDTH + 5), ((i * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                        LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, colores[i][j]);
-                System.out.print(colores[i][j]);
+                        LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, colores[i][j], poder);
             }
-            System.out.println("");
         }
     }
 
-    //metodo para iniciar el juego.
-    public void start() {
-        juego.resume();
-        pausa.set(false);
+    //añade poderes al array
+    public void addItem(Poderes i) {
+        items.add(i);
     }
 
-    //metodo para pausar el juego.
-    public final void stop() {
-        juego.suspend();
+    //hace que los poderes empiezen a caer
+    public void dropItems() {
+        for (int i = 0; i < items.size(); i++) {
+            Poderes tempItem = items.get(i);
+            tempItem.drop();
+            items.set(i, tempItem);
+        }
     }
 
-    //metodo para que el hilo deje de correr.
-    public void destroy() {
-        juego.resume();
-        pausa.set(false);
-        juego.stop();
-        pausa.set(true);
-    }
-
-    //metodo para inciar el hilo de la interfaz runnable.
-    @Override
-    public void run() {
-        while (true) {
-            bola.movimiento();
-            rebotePared();
-            reboteBarra();
-            reboteGrilla();
-            siguienteLvl();
-            repaint();
-            try {
-                juego.sleep(nivel);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
+    //comprueba si ya se cogio el item para eliminarlo del array
+    public void checkItemList() {
+        for (int i = 0; i < items.size(); i++) {
+            Poderes tempItem = items.get(i);
+            if (barra.caughtItem(tempItem)) {
+                items.remove(i);
+            } else if (tempItem.getY() > VENTANA_HEIGHT) {
+                items.remove(i);
             }
         }
     }
@@ -232,44 +271,159 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         return true;
     }
 
+    //comprueba si ya se gano y pasa al siguiente nivel
     public void siguienteLvl() {
         if (ganar()) {
-            if (nivel == 3) {
-                pausa.set(true);
-                grilla();
-                grilla[1][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
-                        ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                        LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4);
-                grilla[1][3] = new Grilla((3 * LADRILLO_WIDTH + 5),
-                        ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                        LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4);
-                grilla[1][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
-                        ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                        LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4);
-                nivel--;
-                vidas++;
-                reStart();
+            timer.stop();
+            if (CargarNivel.archivo == null && CargarNivel.imgInt == null) {
+                if (nivel == 3) {
+                    temporizador = 250;
+                    nivel--;
+                    vidas++;
+                    pausa.set(true);
+                    grilla();
+                    grilla[3][0] = new Grilla((0 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[3][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[3][3] = new Grilla((3 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[3][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[3][6] = new Grilla((6 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    reStart();
+                } else if (nivel == 2) {
+                    temporizador = 200;
+                    nivel--;
+                    vidas++;
+                    pausa.set(true);
+                    grilla();
+                    grilla[1][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
+                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[1][2] = new Grilla((2 * LADRILLO_WIDTH + 5),
+                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[2][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
+                            ((2 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[2][2] = new Grilla((2 * LADRILLO_WIDTH + 5),
+                            ((2 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[3][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[3][2] = new Grilla((2 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
 
+                    grilla[1][4] = new Grilla((4 * LADRILLO_WIDTH + 5),
+                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[1][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
+                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[2][4] = new Grilla((4 * LADRILLO_WIDTH + 5),
+                            ((2 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[2][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
+                            ((2 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[3][4] = new Grilla((4 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    grilla[3][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
+                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
+                    reStart();
+
+                } else if (nivel == 1) {
+                    registrarPuntajes();
+                    gano = true;
+                    repaint();
+                    int opcion = JOptionPane.showConfirmDialog(null, "Quiere volver a jugar?", "BrickBreacker", 0);
+                    if (opcion == 0) {
+                        ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
+                        Ventana.main(null);
+                        destroy();
+                    } else {
+                        ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
+                        Menu.main(null);
+                        destroy();
+                    }
+                    destroy();
+                }
+            } else {
+                registrarPuntajes();
+                gano = true;
+                repaint();
+                int opcion = JOptionPane.showConfirmDialog(null, "Quiere volver a jugar tu nivel personalizado?", "BrickBreacker", 0);
+                if (opcion == 0) {
+                    ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
+                    Ventana.main(null);
+                    destroy();
+                } else {
+                    ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
+                    CargarNivel.archivo = null;
+                    CargarNivel.imgInt = null;
+                    Menu.main(null);
+                    destroy();
+                }
+                destroy();
             }
         }
     }
 
-    //metodo que pinta todos los componentes del juego.
+//metodo que pinta todos los componentes del juego.
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(img.getImage(), 0, 0, VENTANA_WIDTH, VENTANA_HEIGHT, null);
         barra.paint(g);
         bola.paint(g);
-        if (pausa.get() == true) {
+        for (Poderes i : items) {
+            i.draw(g);
+        }
+        if (pausa.get() == true && gano == false && perder == false) {
+            g.setFont(fuente(25));
+            g.setColor(Color.BLACK);
+            g.drawString("Presione espacio para Empezar", 68, 243);
             g.setColor(Color.WHITE);
-            g.setFont(fuente());
             g.drawString("Presione espacio para Empezar", 65, 240);
         }
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 7; j++) {
                 grilla[i][j].paint(g);
             }
+        }
+        if (perder == true) {
+            g.setFont(fuente(25));
+            g.setColor(Color.BLACK);
+            g.drawString("Tu puntaje fue de : " + puntaje, 143, 103);
+            g.setColor(Color.WHITE);
+            g.drawString("Tu puntaje fue de : " + puntaje, 140, 100);
+            g.setFont(fuente(35));
+            g.setColor(Color.BLACK);
+            g.drawString("PERDISTE!!", 216, 73);
+            g.setColor(Color.WHITE);
+            g.drawString("PERDISTE!!", 213, 70);
+        } else if (gano == true) {
+            g.setFont(fuente(25));
+            g.setColor(Color.BLACK);
+            g.drawString("Tu puntaje fue de : " + puntaje, 143, 103);
+            g.setColor(Color.WHITE);
+            g.drawString("Tu puntaje fue de : " + puntaje, 140, 100);
+            g.setFont(fuente(35));
+            g.setColor(Color.BLACK);
+            g.drawString("FELICITACIONES GANASTE!!", 43, 73);
+            g.setColor(Color.WHITE);
+            g.drawString("FELICITACIONES GANASTE!!", 40, 70);
         }
     }
 
@@ -283,11 +437,20 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             repaint();
             stop();
         } else {
-            JOptionPane.showMessageDialog(null, "su Puntaje fue de: " + puntaje);
-            ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
+            timer.stop();
+            perder = true;
+            repaint();
             registrarPuntajes();
-            Menu.main(null);
-            destroy();
+            int opcion = JOptionPane.showConfirmDialog(null, "Quiere volver a jugar?", "BrickBreacker", 0);
+            if (opcion == 0) {
+                ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
+                Ventana.main(null);
+                destroy();
+            } else {
+                ((JFrame) SwingUtilities.getWindowAncestor(this)).dispose();
+                Menu.main(null);
+                destroy();
+            }
         }
     }
 
@@ -318,39 +481,29 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     //metodo para comparar cuando rebota en una pared o cuando pierde.
     public void rebotePared() {
         if (bola.getX() < 0 || bola.getX() > 670) {
-            ReproducirSonido(3);
+            reproducirSonido(3);
             bola.setDirX(bola.getDirX() * -1);
             inmunidad = false;
         }
         if (bola.getY() == 0) {
-            ReproducirSonido(3);
+            reproducirSonido(3);
             bola.setDirY(bola.getDirY() * -1);
             inmunidad = false;
         } else if (bola.getY() > 510) {
-            if (poder == "Inmunidad") {
-                ReproducirSonido(1);
-                bola.setDirY(bola.getDirY() * -1);
-                cant--;
-                if (cant == 0) {
-                    poder = "Ninguno";
-                }
-                if (inmunidad) {
-                    inmunidad = false;
+            pausa.set(true);
+            if (puntaje > 0) {
+                if (puntaje == 50) {
+                    puntaje -= 50;
                 } else {
-                    inmunidad = true;
+                    puntaje -= 100;
                 }
-            } else {
-                pausa.set(true);
-                if (puntaje > 0) {
-                    if (puntaje == 50) {
-                        puntaje -= 50;
-                    } else {
-                        puntaje -= 100;
-                    }
-                }
-                vidas--;
-                reStart();
             }
+            if (inmunidadVida > 0) {
+                inmunidadVida--;
+            } else {
+                vidas--;
+            }
+            reStart();
         }
     }
 
@@ -358,11 +511,11 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     public void reboteBarra() {
         if (inmunidad == false) {
             if (barra.golpeArriba(bola.getX(), bola.getY())) {
-                ReproducirSonido(1);
+                reproducirSonido(1);
                 bola.setDirY(bola.getDirY() * -1);
                 inmunidad = true;
             } else if (barra.golpeIzquierda(bola.getX(), bola.getY()) || barra.golpeDerecha(bola.getX(), bola.getY())) {
-                ReproducirSonido(1);
+                reproducirSonido(1);
                 bola.setDirY(bola.getDirY() * -1);
                 bola.setDirX(bola.getDirX() * -1);
                 inmunidad = true;
@@ -375,55 +528,103 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 7; j++) {
                 if (grilla[i][j].golpeArriba(bola.getX() + 10, bola.getY() + 10)) {
-                    ReproducirSonido(2);
+                    reproducirSonido(2);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
+                    if (grilla[i][j].getColor() == 0) {
+                        addItem(grilla[i][j].poder);
+                        puntaje += 100;
+                    } else {
+                        puntaje += 50;
+                    }
                     break;
                 }
                 if (grilla[i][j].golpeAbajo(bola.getX() + 10, bola.getY() + 10)) {
-                    ReproducirSonido(2);
+                    reproducirSonido(2);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
+                    if (grilla[i][j].getColor() == 0) {
+                        addItem(grilla[i][j].poder);
+                        puntaje += 100;
+                    } else {
+                        puntaje += 50;
+                    }
                     break;
                 }
                 if (grilla[i][j].golpeDerecha(bola.getX() + 10, bola.getY() + 10)) {
-                    ReproducirSonido(2);
+                    reproducirSonido(2);
                     bola.setDirX(bola.getDirX() * -1);
                     inmunidad = false;
+                    if (grilla[i][j].getColor() == 0) {
+                        addItem(grilla[i][j].poder);
+                        puntaje += 100;
+                    } else {
+                        puntaje += 50;
+                    }
                     break;
                 }
                 if (grilla[i][j].golpeIzquierda(bola.getX() + 10, bola.getY() + 10)) {
-                    ReproducirSonido(2);
+                    reproducirSonido(2);
                     bola.setDirX(bola.getDirX() * -1);
                     inmunidad = false;
+                    if (grilla[i][j].getColor() == 0) {
+                        addItem(grilla[i][j].poder);
+                        puntaje += 100;
+                    } else {
+                        puntaje += 50;
+                    }
                     break;
                 }
                 if (grilla[i][j].golpeEsquinaAD(bola.getX() + 10, bola.getY() + 10)) {
-                    ReproducirSonido(2);
+                    reproducirSonido(2);
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
+                    if (grilla[i][j].getColor() == 0) {
+                        addItem(grilla[i][j].poder);
+                        puntaje += 100;
+                    } else {
+                        puntaje += 50;
+                    }
                     break;
                 }
                 if (grilla[i][j].golpeEsquinaAI(bola.getX() + 10, bola.getY() + 10)) {
-                    ReproducirSonido(2);
+                    reproducirSonido(2);
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
+                    if (grilla[i][j].getColor() == 0) {
+                        addItem(grilla[i][j].poder);
+                        puntaje += 100;
+                    } else {
+                        puntaje += 50;
+                    }
                     break;
                 }
                 if (grilla[i][j].golpeEsquinaArD(bola.getX() + 10, bola.getY() + 10)) {
-                    ReproducirSonido(2);
+                    reproducirSonido(2);
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
+                    if (grilla[i][j].getColor() == 0) {
+                        addItem(grilla[i][j].poder);
+                        puntaje += 100;
+                    } else {
+                        puntaje += 50;
+                    }
                     break;
                 }
                 if (grilla[i][j].golpeEsquinaArI(bola.getX() + 10, bola.getY() + 10)) {
-                    ReproducirSonido(2);
+                    reproducirSonido(2);
                     bola.setDirX(bola.getDirX() * -1);
                     bola.setDirY(bola.getDirY() * -1);
                     inmunidad = false;
+                    if (grilla[i][j].getColor() == 0) {
+                        addItem(grilla[i][j].poder);
+                        puntaje += 100;
+                    } else {
+                        puntaje += 50;
+                    }
                     break;
                 }
             }
@@ -431,7 +632,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
     }
 
     //metodo para cambiar la fuente a una personalizada y si no la encuentra la fuente arial.
-    public Font fuente() {
+    public Font fuente(int tam) {
         try {
             InputStream is = getClass().getResourceAsStream("/imagenes/batmfa__.ttf");
             font = Font.createFont(Font.TRUETYPE_FONT, is);
@@ -439,8 +640,9 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             System.err.println("batmfa__.ttf" + " No se cargo la fuente");
             font = new Font("Arial", Font.PLAIN, 14);
         }
-        Font tfont = font.deriveFont(Font.BOLD, 25);
+        Font tfont = font.deriveFont(Font.BOLD, tam);
         return tfont;
+
     }
 
     //clase Escucha que hereda de KeyApapter el metodo keyPressed y implementa la interfaz MouseMotionListener
@@ -452,6 +654,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         public void keyPressed(KeyEvent ke) {
             int key = ke.getKeyCode();
             if (key == KeyEvent.VK_SPACE) {
+                timer.start();
                 start();
             }
         }
@@ -473,6 +676,19 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     bola.setX(e.getX() - (bola.width / 2));
                     repaint();
                 }
+            }
+        }
+    }
+
+    private class Listening implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            temporizador--;
+            if (temporizador == 0) {
+                timer.stop();
+                vidas = 0;
+                reStart();
             }
         }
     }

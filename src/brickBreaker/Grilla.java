@@ -7,15 +7,18 @@ public class Grilla extends Juego implements Constantes {
 
     private int color;
     private boolean destruido = false;
+    public Poderes poder;
     private final ImageIcon img1, img2, img3, img4;
 
-    public Grilla(int x, int y, int width, int height, int color) {
+    public Grilla(int x, int y, int width, int height, int color, int tipoItem) {
         super(x, y, width, height);
         this.color = color;
         img1 = new ImageIcon(getClass().getResource("/Imagenes/Ladrillo1.png"));
         img2 = new ImageIcon(getClass().getResource("/Imagenes/Ladrillo2.png"));
         img3 = new ImageIcon(getClass().getResource("/Imagenes/Ladrillo3.png"));
         img4 = new ImageIcon(getClass().getResource("/Imagenes/Ladrillo4.png"));
+
+        poder = new Poderes(x + (width / 4), y + (height / 4), 20, 20, tipoItem);
     }
 
     public void paint(Graphics g) {
@@ -41,20 +44,11 @@ public class Grilla extends Juego implements Constantes {
     public void golpe() {
         if (color == 0) {
             destruido = true;
-            Tablero.puntaje += 50;
-            int rand = (int) Math.rint(Math.random() * 10)+1;
-            if (rand == 3 && Tablero.poder=="Ninguno") {
-                Tablero.poder = "Golpe por 2";
-            } else if (rand == 7 && Tablero.poder=="Ninguno") {
-                Tablero.poder = "Inmunidad";
-                Tablero.cant=3;
-            }
-            color = -1;
         }
-        if (color == -1) {
-            destruido = true;
-            color = -2;
-        }
+    }
+
+    public boolean isDestruido() {
+        return destruido;
     }
 
     public int getColor() {
@@ -64,9 +58,9 @@ public class Grilla extends Juego implements Constantes {
     public boolean golpeArriba(int bolaX, int bolaY) {
         if ((bolaX >= x) && (bolaX <= x + width + 4) && (bolaY + 9 == y) && (destruido == false)) {
             if (color < 4) {
-                if (Tablero.poder == "Golpe por 2") {
-                    color--;
-                    Tablero.poder = "Ninguno";
+                if (Tablero.dobleGolpe){
+                    color --;
+                    Tablero.dobleGolpe = false;
                 }
                 color--;
             }
@@ -78,9 +72,9 @@ public class Grilla extends Juego implements Constantes {
     public boolean golpeAbajo(int bolaX, int bolaY) {
         if ((bolaX >= x) && (bolaX <= x + width + 4) && (bolaY - 9 == y + height) && (destruido == false)) {
             if (color < 4) {
-                if (Tablero.poder == "Golpe por 2") {
-                    color--;
-                    Tablero.poder = "Ninguno";
+                if (Tablero.dobleGolpe){
+                    color --;
+                    Tablero.dobleGolpe = false;
                 }
                 color--;
             }
@@ -92,9 +86,9 @@ public class Grilla extends Juego implements Constantes {
     public boolean golpeDerecha(int bolaX, int bolaY) {
         if ((bolaY >= y) && (bolaY <= y + height + 4) && (bolaX - 9 == x + width) && (destruido == false)) {
             if (color < 4) {
-                if (Tablero.poder == "Golpe por 2") {
-                    color--;
-                    Tablero.poder = "Ninguno";
+                if (Tablero.dobleGolpe){
+                    color --;
+                    Tablero.dobleGolpe = false;
                 }
                 color--;
             }
@@ -106,9 +100,9 @@ public class Grilla extends Juego implements Constantes {
     public boolean golpeIzquierda(int bolaX, int bolaY) {
         if ((bolaY >= y) && (bolaY <= y + height + 4) && (bolaX + 9 == x) && (destruido == false)) {
             if (color < 4) {
-                if (Tablero.poder == "Golpe por 2") {
-                    color--;
-                    Tablero.poder = "Ninguno";
+                if (Tablero.dobleGolpe){
+                    color --;
+                    Tablero.dobleGolpe = false;
                 }
                 color--;
             }
@@ -121,9 +115,9 @@ public class Grilla extends Juego implements Constantes {
         if ((bolaY - 5 >= y + height - 9) && (bolaY - 5 <= y + height)
                 && (bolaX - 5 >= x + width - 9) && (bolaX - 5 <= x + width) && (destruido == false)) {
             if (color < 4) {
-                if (Tablero.poder == "Golpe por 2") {
-                    color--;
-                    Tablero.poder = "Ninguno";
+                if (Tablero.dobleGolpe){
+                    color --;
+                    Tablero.dobleGolpe = false;
                 }
                 color--;
             }
@@ -136,9 +130,9 @@ public class Grilla extends Juego implements Constantes {
         if ((bolaY - 5 >= y + height - 9) && (bolaY - 5 <= y + height)
                 && (bolaX + 5 >= x) && (bolaX + 5 <= x + 9) && (destruido == false)) {
             if (color < 4) {
-                if (Tablero.poder == "Golpe por 2") {
-                    color--;
-                    Tablero.poder = "Ninguno";
+                if (Tablero.dobleGolpe){
+                    color --;
+                    Tablero.dobleGolpe = false;
                 }
                 color--;
             }
@@ -148,12 +142,12 @@ public class Grilla extends Juego implements Constantes {
     }
 
     public boolean golpeEsquinaArD(int bolaX, int bolaY) {
-        if ((bolaY + 5 >= y) && (bolaY + 5 <= y + 9) && (bolaX - 5 >= x + width - 9)
-                && (bolaX - 5 <= x + width) && (destruido == false)) {
+        if ((bolaY + 5 >= y) && (bolaY + 5 <= y + 9)
+                && (bolaX - 5 >= x + width - 9) && (bolaX - 5 <= x + width) && (destruido == false)) {
             if (color < 4) {
-                if (Tablero.poder == "Golpe por 2") {
-                    color--;
-                    Tablero.poder = "Ninguno";
+                if (Tablero.dobleGolpe){
+                    color --;
+                    Tablero.dobleGolpe = false;
                 }
                 color--;
             }
@@ -163,12 +157,12 @@ public class Grilla extends Juego implements Constantes {
     }
 
     public boolean golpeEsquinaArI(int bolaX, int bolaY) {
-        if ((bolaY + 5 >= y - 9) && (bolaY + 5 <= y)
+        if ((bolaY + 5 >= y + 9) && (bolaY + 5 <= y)
                 && (bolaX + 5 >= x) && (bolaX + 5 <= x + 9) && (destruido == false)) {
             if (color < 4) {
-                if (Tablero.poder == "Golpe por 2") {
-                    color--;
-                    Tablero.poder = "Ninguno";
+                if (Tablero.dobleGolpe){
+                    color --;
+                    Tablero.dobleGolpe = false;
                 }
                 color--;
             }

@@ -97,6 +97,7 @@ public class CargarNivel extends JFrame implements ActionListener {
             m.main(null);
         } else if (evento.getSource() == Bcancelar) {
             //devolver a la otra ventana
+            imgInt = null;
             this.dispose();
             Menu m = new Menu();
             m.main(null);

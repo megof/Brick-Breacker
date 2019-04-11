@@ -12,6 +12,14 @@ public class Barra extends Juego implements Constantes {
         super(x, y, width, height);
         img = new ImageIcon(getClass().getResource("/Imagenes/barra.png")); 
     }
+    
+    public boolean caughtItem(Poderes i) {
+		if ((i.getX() < x + width) && (i.getX() + i.getWidth() > x) && (y == i.getY() || y == i.getY() - 1)) {
+                    i.poder(this);
+			return true;
+		}
+		return false;
+	}
 
     public void paint(Graphics g) {
         g.drawImage(img.getImage(),x , y, width,height,null );
