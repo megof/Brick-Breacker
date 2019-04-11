@@ -490,20 +490,24 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             bola.setDirY(bola.getDirY() * -1);
             inmunidad = false;
         } else if (bola.getY() > 510) {
-            pausa.set(true);
-            if (puntaje > 0) {
-                if (puntaje == 50) {
-                    puntaje -= 50;
-                } else {
-                    puntaje -= 100;
-                }
-            }
+            System.out.print(inmunidadVida);
             if (inmunidadVida > 0) {
+                reproducirSonido(3);
+                bola.setDirY(bola.getDirY() * -1);
+                inmunidad = false;
                 inmunidadVida--;
             } else {
+                pausa.set(true);
+                if (puntaje > 0) {
+                    if (puntaje == 50) {
+                        puntaje -= 50;
+                    } else {
+                        puntaje -= 100;
+                    }
+                }
                 vidas--;
+                reStart();
             }
-            reStart();
         }
     }
 

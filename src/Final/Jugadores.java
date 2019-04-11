@@ -13,7 +13,7 @@ import javax.swing.*;
 
 public class Jugadores extends JFrame implements ActionListener {
 
-    public static String Jugador = "Morphen";
+    public static String Jugador = "";
     private final Container contenedor;
     private final JButton Bcargar;
     private final JButton Bcancelar;
