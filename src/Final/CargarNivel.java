@@ -1,8 +1,5 @@
 package Final;
 
-import Basededatos.Crear;
-import brickBreaker.Tablero;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;

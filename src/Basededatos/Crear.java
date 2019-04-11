@@ -19,7 +19,6 @@ public class Crear {
         Rs = consulta.GetConsult();
         try {
             if (Rs.next()) {
-                System.out.println(1);
                 return null;//encuentra
             } else {
                 Insertar(consulta, "Jugador", 0, "");//no encuentra entonces crea
@@ -41,8 +40,7 @@ public class Crear {
             }
         } else {
             try {
-                Ps = Conexion.prepareStatement("Insert into proyecto_partidas(Partidas_Jugador, Partidas_Puntaje, Partidas_Fecha) Values('" + Jugador + "','"+ puntaje + "','"+ fecha +"')");
-                System.out.println(Ps);
+                Ps = Conexion.prepareStatement("Insert into proyecto_partidas(Partidas_Jugador, Partidas_Puntaje, Partidas_Fecha) Values('" + Jugador + "','" + puntaje + "','" + fecha + "')");
                 if (Ps.executeUpdate() > 0) {
                     return Ps;//guardado
                 }

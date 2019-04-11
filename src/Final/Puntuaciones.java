@@ -1,5 +1,6 @@
 package Final;
 //SELECT * FROM proyecto_jugadores ORDER BY Jugadores_Id DESC LIMIT 5
+
 import Basededatos.Consultar;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -22,27 +23,27 @@ public class Puntuaciones extends JFrame implements ActionListener {
     private final String[] encabezados;
     private final String[][] contenido;
     private final Icon back;
-    
+
     public Puntuaciones() {
         super("Selección de usuarios");
-        
+
         back = new ImageIcon("src/Imagenes/back.PNG");
         Bvolver = new JButton("Volver", back);
         Bvolver.addActionListener(this);
 
         Lmensaje = new JLabel("Mejores puntuaciones");
-        
+
         contenido = new String[11][4];
         encabezados = new String[3];
         cargarlista();
         tabla = new JTable(contenido, encabezados);
-        tabla.enable(false); 
+        tabla.enable(false);
         Sbarra = new JScrollPane(tabla);
-        Sbarra.setPreferredSize(new Dimension(300,199)); 
+        Sbarra.setPreferredSize(new Dimension(300, 199));
         JLabel l = new JLabel("prueba");
-        JPanel panel = new JPanel(new GridLayout(1,1));
+        JPanel panel = new JPanel(new GridLayout(1, 1));
         panel.add(Sbarra);
-        
+
         contenedor = getContentPane();
         contenedor.setLayout(new FlowLayout());
         contenedor.add(Lmensaje);
@@ -55,41 +56,46 @@ public class Puntuaciones extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         setVisible(true);
     }
-    public void cargarlista(){
-        encabezados[0]="Nombre";
-        encabezados[1]="Puntuación";
-        encabezados[2]="Fecha";
-        int i=0;
-        Consultar consultar = new Consultar("", "proyecto_partidas",""); 
-        Rs=consultar.GetConsult();
-        if(Rs==null){
+
+    public void cargarlista() {
+        encabezados[0] = "Nombre";
+        encabezados[1] = "Puntuación";
+        encabezados[2] = "Fecha";
+        int i = 0;
+        Consultar consultar = new Consultar("", "proyecto_partidas", "");
+        Rs = consultar.GetConsult();
+        if (Rs == null) {
             JOptionPane.showMessageDialog(null, "error inesperado, por favor intenta de nuevo", "Error al cargar", 0);
-        }else{
+        } else {
             try {
-                while(Rs.next()){
-                    contenido[i][0]=obtenernombres(Integer.parseInt(Rs.getString("Partidas_Jugador")));
-                    contenido[i][1]=Rs.getString("Partidas_Puntaje");
-                    contenido[i][2]=Rs.getString("Partidas_Fecha");
+                while (Rs.next()) {
+                    contenido[i][0] = obtenernombres(Integer.parseInt(Rs.getString("Partidas_Jugador")));
+                    contenido[i][1] = Rs.getString("Partidas_Puntaje");
+                    contenido[i][2] = Rs.getString("Partidas_Fecha");
                     i++;
                 }
-            } catch (SQLException ex) {}
+            } catch (SQLException ex) {
+            }
         }
     }
-    public String obtenernombres(int id){
-        Consultar consultar = new Consultar(""+id, "proyecto_jugadores","Jugadores_Id"); 
-        auxiliar=consultar.GetConsult();
+
+    public String obtenernombres(int id) {
+        Consultar consultar = new Consultar("" + id, "proyecto_jugadores", "Jugadores_Id");
+        auxiliar = consultar.GetConsult();
         try {
-            while(auxiliar.next()){
+            while (auxiliar.next()) {
                 return auxiliar.getString("Jugadores_Nick");
             }
-        } catch (SQLException ex) {}
+        } catch (SQLException ex) {
+        }
         return "";
     }
+
     @Override
     public void actionPerformed(ActionEvent evento) {
-            String[] args=null;
-            Menu m = new Menu();
-            m.main(args);
-            this.dispose();
+        String[] args = null;
+        Menu m = new Menu();
+        m.main(args);
+        this.dispose();
     }
 }

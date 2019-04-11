@@ -11,22 +11,28 @@ public class Poderes extends Juego implements Constantes {
     public Poderes(int x, int y, int width, int height, int type) {
         super(x, y, width, height);
         setType(type);
-        poderes = new ImageIcon[3];
+        poderes = new ImageIcon[5];
         cargarImagenes();
     }
 
     public void draw(Graphics g) {
         switch (getType()) {
             case 1:
-                g.drawImage(poderes[2].getImage(), x, y, width+25, height, null);
+                g.drawImage(poderes[2].getImage(), x, y, width + 25, height, null);
                 break;
             case 2:
-                g.drawImage(poderes[1].getImage(), x, y, width+25, height, null);
+                g.drawImage(poderes[1].getImage(), x, y, width + 25, height, null);
                 break;
             case 3:
                 g.drawImage(poderes[0].getImage(), x, y, width, height, null);
                 break;
             case 4:
+                g.drawImage(poderes[4].getImage(), x, y, width, height, null);
+                break;
+            case 5:
+                g.drawImage(poderes[3].getImage(), x, y, width, height, null);
+                break;
+            default:
                 return;
         }
     }
@@ -37,7 +43,7 @@ public class Poderes extends Juego implements Constantes {
 
     public void cargarImagenes() {
         poderes[0] = new ImageIcon(getClass().getResource("/Imagenes/Vidas.png"));
-        for (int i = 1; i < poderes.length; i++) {
+        for (int i = 1; i < 5; i++) {
             poderes[i] = new ImageIcon(getClass().getResource("/Imagenes/poder" + i + ".png"));
         }
     }
@@ -49,8 +55,14 @@ public class Poderes extends Juego implements Constantes {
             b.setWidth(b.getWidth() - 15);
         } else if (getType() == 3) {
             Tablero.vidas++;
-        } 
+        }else if (getType() == 4){
+            Tablero.dobleGolpe = true;
+        } else if (getType() == 5){
+            Tablero.inmunidadVida = 3;
+        }
     }
+        
+    
 
     public void setType(int type) {
         this.type = type;

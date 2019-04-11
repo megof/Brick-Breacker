@@ -10,11 +10,11 @@ public class Bola extends Juego implements Constantes {
 
     public Bola(int x, int y, int width, int height) {
         super(x, y, width, height);
-        img = new ImageIcon(getClass().getResource("/Imagenes/bola.png")); 
+        img = new ImageIcon(getClass().getResource("/Imagenes/bola.png"));
     }
 
     public void paint(Graphics g) {
-        g.drawImage(img.getImage(),x , y, width,height,null );
+        g.drawImage(img.getImage(), x, y, width, height, null);
     }
 
     public void movimiento() {

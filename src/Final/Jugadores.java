@@ -12,7 +12,8 @@ import java.sql.SQLException;
 import javax.swing.*;
 
 public class Jugadores extends JFrame implements ActionListener {
-    public static String Jugador="Morphen";
+
+    public static String Jugador = "Morphen";
     private final Container contenedor;
     private final JButton Bcargar;
     private final JButton Bcancelar;
@@ -26,7 +27,7 @@ public class Jugadores extends JFrame implements ActionListener {
 
     public Jugadores() {
         super("Selección de usuarios");
-        
+
         save = new ImageIcon("src/Imagenes/load.PNG");
         Bcargar = new JButton("Cargar", save);
         Bcargar.addActionListener(this);
@@ -41,12 +42,12 @@ public class Jugadores extends JFrame implements ActionListener {
         cargarlista();
         Llista.setModel(modelo);
         Sbarra = new JScrollPane(Llista);
-        Sbarra.setPreferredSize(new Dimension(200,120));
-        
+        Sbarra.setPreferredSize(new Dimension(200, 120));
+
         Pbotones = new JPanel(new GridLayout(1, 2));
         Pbotones.add(Bcargar);
         Pbotones.add(Bcancelar);
-        Pcampos = new JPanel(new GridLayout(1,1));
+        Pcampos = new JPanel(new GridLayout(1, 1));
         Pcampos.add(Lmensaje);
         contenedor = getContentPane();
         contenedor.setLayout(new FlowLayout());
@@ -60,34 +61,36 @@ public class Jugadores extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         setVisible(true);
     }
-    public void cargarlista(){
-        Consultar consultar = new Consultar("","proyecto_jugadores","Jugadores_Nick"); 
-        Rs=consultar.GetConsult();
-        if(Rs==null){
+
+    public void cargarlista() {
+        Consultar consultar = new Consultar("", "proyecto_jugadores", "Jugadores_Nick");
+        Rs = consultar.GetConsult();
+        if (Rs == null) {
             JOptionPane.showMessageDialog(null, "error inesperado, por favor intenta de nuevo", "Error al cargar", 0);
-        }else{
+        } else {
             try {
-                while(Rs.next()){                        
+                while (Rs.next()) {
                     modelo.addElement(Rs.getString("Jugadores_Nick"));
                 }
-            } catch (SQLException ex) {}
+            } catch (SQLException ex) {
+            }
         }
     }
+
     @Override
     public void actionPerformed(ActionEvent evento) {
-        if (evento.getSource()== Bcargar){
-            if(Llista.getSelectedValue()!=null){
-                Jugador=""+Llista.getSelectedValue();
+        if (evento.getSource() == Bcargar) {
+            if (Llista.getSelectedValue() != null) {
+                Jugador = "" + Llista.getSelectedValue();
                 dispose();
                 Menu m = new Menu();
                 m.main(null);
-            }else{
+            } else {
                 JOptionPane.showMessageDialog(null, "Por favor selecciona un jugador");
             }
-            //System.out.println(Llista.getSelectedValue());
-        }else{
+        } else {
             //devolver a la otra ventana
-            String[] args=null;
+            String[] args = null;
             Menu m = new Menu();
             m.main(args);
             this.dispose();
