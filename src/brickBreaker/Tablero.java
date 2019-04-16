@@ -137,18 +137,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     int poder = random.nextInt(15) + 1;
                     grilla[i][j] = new Grilla((j * LADRILLO_WIDTH + 5), ((i * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
                             LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, color, poder);
-                    if(color>0){
-                        if(poder>9){
-                        System.out.print(poder+" ");
-                        }else{
-                        System.out.print("0"+poder+" ");
-                        }
-                    }else{
-                        
-                        System.out.print("00 ");
-                    }
                 }
-                System.out.println("");
             }
             int randoms = random.nextInt(4) + 1;
             for (int i = 0; i < randoms; i++) {
