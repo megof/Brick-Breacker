@@ -128,15 +128,34 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
 
     //metodo para crear la grilla(ladrillos).
     public final void grilla() {
+
         if (CargarNivel.archivo == null && CargarNivel.imgInt == null) {
+            Random random = new Random();
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 7; j++) {
-                    Random random = new Random();
-                    int color = random.nextInt(3) + 1;
+                    int color = random.nextInt(4);
                     int poder = random.nextInt(15) + 1;
                     grilla[i][j] = new Grilla((j * LADRILLO_WIDTH + 5), ((i * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
                             LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, color, poder);
+                    if(color>0){
+                        if(poder>9){
+                        System.out.print(poder+" ");
+                        }else{
+                        System.out.print("0"+poder+" ");
+                        }
+                    }else{
+                        
+                        System.out.print("00 ");
+                    }
                 }
+                System.out.println("");
+            }
+            int randoms = random.nextInt(4) + 1;
+            for (int i = 0; i < randoms; i++) {
+                int intI = random.nextInt(5);
+                int intJ = random.nextInt(7);
+                grilla[intI][intJ] = new Grilla((intJ * LADRILLO_WIDTH + 5), ((intI * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
+                        LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 0);
             }
         } else {
             if (CargarNivel.archivo == null) {
@@ -200,11 +219,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     for (int i = 0; i < 5; i++) {
                         String[] values = linea.split(",");
                         for (int j = 0; j < values.length; j++) {
-                            if (Integer.parseInt(values[j]) == 0) {
-                                colores[i][j] = -1;
-                            } else {
-                                colores[i][j] = Integer.parseInt(values[j]);
-                            }
+                            colores[i][j] = Integer.parseInt(values[j]);
                         }
                         linea = reader.readLine();
                     }
@@ -215,11 +230,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         } else {
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 7; j++) {
-                    if (Agrilla[j + 7 * i] == 0) {
-                        colores[i][j] = -1;
-                    } else {
-                        colores[i][j] = Agrilla[j + 7 * i];
-                    }
+                    colores[i][j] = Agrilla[j + 7 * i];
                 }
             }
         }
@@ -282,21 +293,6 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     vidas++;
                     pausa.set(true);
                     grilla();
-                    grilla[3][0] = new Grilla((0 * LADRILLO_WIDTH + 5),
-                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-                    grilla[3][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
-                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-                    grilla[3][3] = new Grilla((3 * LADRILLO_WIDTH + 5),
-                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-                    grilla[3][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
-                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-                    grilla[3][6] = new Grilla((6 * LADRILLO_WIDTH + 5),
-                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
                     reStart();
                 } else if (nivel == 2) {
                     temporizador = 200;
@@ -304,45 +300,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     vidas++;
                     pausa.set(true);
                     grilla();
-                    grilla[1][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
-                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-                    grilla[1][2] = new Grilla((2 * LADRILLO_WIDTH + 5),
-                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-                    grilla[2][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
-                            ((2 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-                    grilla[2][2] = new Grilla((2 * LADRILLO_WIDTH + 5),
-                            ((2 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-                    grilla[3][1] = new Grilla((1 * LADRILLO_WIDTH + 5),
-                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-                    grilla[3][2] = new Grilla((2 * LADRILLO_WIDTH + 5),
-                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-
-                    grilla[1][4] = new Grilla((4 * LADRILLO_WIDTH + 5),
-                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-                    grilla[1][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
-                            ((1 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-                    grilla[2][4] = new Grilla((4 * LADRILLO_WIDTH + 5),
-                            ((2 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-                    grilla[2][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
-                            ((2 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-                    grilla[3][4] = new Grilla((4 * LADRILLO_WIDTH + 5),
-                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
-                    grilla[3][5] = new Grilla((5 * LADRILLO_WIDTH + 5),
-                            ((3 * LADRILLO_HEIGHT) + (LADRILLO_HEIGHT / 5)),
-                            LADRILLO_WIDTH - 5, LADRILLO_HEIGHT - 5, 4, 3);
                     reStart();
-
                 } else if (nivel == 1) {
                     registrarPuntajes();
                     gano = true;
@@ -387,9 +345,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
         g.drawImage(img.getImage(), 0, 0, VENTANA_WIDTH, VENTANA_HEIGHT, null);
         barra.paint(g);
         bola.paint(g);
-        for (Poderes i : items) {
-            i.draw(g);
-        }
+
         if (pausa.get() == true && gano == false && perder == false) {
             g.setFont(fuente(25));
             g.setColor(Color.BLACK);
@@ -397,11 +353,17 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             g.setColor(Color.WHITE);
             g.drawString("Presione espacio para Empezar", 65, 240);
         }
+
+        for (Poderes i : items) {
+            i.draw(g);
+        }
+
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 7; j++) {
                 grilla[i][j].paint(g);
             }
         }
+
         if (perder == true) {
             g.setFont(fuente(25));
             g.setColor(Color.BLACK);
@@ -490,7 +452,6 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
             bola.setDirY(bola.getDirY() * -1);
             inmunidad = false;
         } else if (bola.getY() > 510) {
-            System.out.print(inmunidadVida);
             if (inmunidadVida > 0) {
                 reproducirSonido(3);
                 bola.setDirY(bola.getDirY() * -1);
@@ -538,7 +499,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     if (grilla[i][j].getColor() == 0) {
                         addItem(grilla[i][j].poder);
                         puntaje += 100;
-                    } else {
+                    } else if (grilla[i][j].getColor() != 4) {
                         puntaje += 50;
                     }
                     break;
@@ -550,7 +511,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     if (grilla[i][j].getColor() == 0) {
                         addItem(grilla[i][j].poder);
                         puntaje += 100;
-                    } else {
+                    } else if (grilla[i][j].getColor() != 4) {
                         puntaje += 50;
                     }
                     break;
@@ -562,7 +523,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     if (grilla[i][j].getColor() == 0) {
                         addItem(grilla[i][j].poder);
                         puntaje += 100;
-                    } else {
+                    } else if (grilla[i][j].getColor() != 4) {
                         puntaje += 50;
                     }
                     break;
@@ -574,7 +535,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     if (grilla[i][j].getColor() == 0) {
                         addItem(grilla[i][j].poder);
                         puntaje += 100;
-                    } else {
+                    } else if (grilla[i][j].getColor() != 4) {
                         puntaje += 50;
                     }
                     break;
@@ -587,7 +548,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     if (grilla[i][j].getColor() == 0) {
                         addItem(grilla[i][j].poder);
                         puntaje += 100;
-                    } else {
+                    } else if (grilla[i][j].getColor() != 4) {
                         puntaje += 50;
                     }
                     break;
@@ -600,7 +561,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     if (grilla[i][j].getColor() == 0) {
                         addItem(grilla[i][j].poder);
                         puntaje += 100;
-                    } else {
+                    } else if (grilla[i][j].getColor() != 4) {
                         puntaje += 50;
                     }
                     break;
@@ -613,7 +574,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     if (grilla[i][j].getColor() == 0) {
                         addItem(grilla[i][j].poder);
                         puntaje += 100;
-                    } else {
+                    } else if (grilla[i][j].getColor() != 4) {
                         puntaje += 50;
                     }
                     break;
@@ -626,7 +587,7 @@ public final class Tablero extends JPanel implements Runnable, Constantes {
                     if (grilla[i][j].getColor() == 0) {
                         addItem(grilla[i][j].poder);
                         puntaje += 100;
-                    } else {
+                    } else if (grilla[i][j].getColor() != 4) {
                         puntaje += 50;
                     }
                     break;

@@ -8,6 +8,7 @@ public class Ventana extends javax.swing.JFrame implements Constantes {
     static Informacion informacion;
 
     public Ventana() {
+        setIconImage(LOGO_ICON.getImage());
         initComponents();
         tablero = new Tablero(VENTANA_WIDTH, VENTANA_HEIGHT);
         informacion = new Informacion(710, 50);

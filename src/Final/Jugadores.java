@@ -1,6 +1,7 @@
 package Final;
 
 import Basededatos.Consultar;
+import static brickBreaker.Constantes.LOGO_ICON;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -27,6 +28,7 @@ public class Jugadores extends JFrame implements ActionListener {
 
     public Jugadores() {
         super("Selección de usuarios");
+        setIconImage(LOGO_ICON.getImage());
 
         save = new ImageIcon("src/Imagenes/load.PNG");
         Bcargar = new JButton("Cargar", save);

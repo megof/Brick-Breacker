@@ -1,5 +1,6 @@
 package Final;
 
+import static brickBreaker.Constantes.LOGO_ICON;
 import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.*;
@@ -11,6 +12,8 @@ public class VentanaLogo extends javax.swing.JFrame implements ActionListener {
     private JLabel Imagen;
 
     public VentanaLogo() {
+        super("Brick Breacker v 8.2");
+        setIconImage(LOGO_ICON.getImage());
         Icon imagen = new ImageIcon("src/Imagenes/Intro.GIF");
         Imagen = new JLabel(imagen);
         contenedor = getContentPane();

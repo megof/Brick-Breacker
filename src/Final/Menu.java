@@ -5,6 +5,7 @@
  */
 package Final;
 
+import static brickBreaker.Constantes.LOGO_ICON;
 import brickBreaker.Ventana;
 import javax.swing.JOptionPane;
 
@@ -20,6 +21,8 @@ public class Menu extends javax.swing.JFrame {
      * Creates new form menu
      */
     public Menu() {
+        super("Inicio");
+        setIconImage(LOGO_ICON.getImage());
         Jugador = Jugadores.Jugador;
         initComponents();
         setLocationRelativeTo(null);

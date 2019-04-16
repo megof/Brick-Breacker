@@ -2,6 +2,7 @@ package Final;
 //SELECT * FROM proyecto_jugadores ORDER BY Jugadores_Id DESC LIMIT 5
 
 import Basededatos.Consultar;
+import static brickBreaker.Constantes.LOGO_ICON;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -25,7 +26,8 @@ public class Puntuaciones extends JFrame implements ActionListener {
     private final Icon back;
 
     public Puntuaciones() {
-        super("Selección de usuarios");
+        super("Mejores puntuaciones");
+        setIconImage(LOGO_ICON.getImage());
 
         back = new ImageIcon("src/Imagenes/back.PNG");
         Bvolver = new JButton("Volver", back);

@@ -1,5 +1,6 @@
 package Final;
 
+import static brickBreaker.Constantes.LOGO_ICON;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -20,6 +21,7 @@ public class CargarNivel extends JFrame implements ActionListener {
 
     public CargarNivel() {
         super("Crear/Cargar niveles");
+        setIconImage(LOGO_ICON.getImage());
 
         grilla = new JButton[35];
         imgInt = new int[35];

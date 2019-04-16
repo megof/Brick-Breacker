@@ -1,5 +1,8 @@
 package brickBreaker;
 
+import java.awt.Image;
+import javax.swing.ImageIcon;
+
 public interface Constantes {
 
     public static final int VENTANA_WIDTH = 710;
@@ -18,4 +21,6 @@ public interface Constantes {
 
     public static final int LADRILLO_WIDTH = 98;
     public static final int LADRILLO_HEIGHT = 38;
+    
+    public static final ImageIcon LOGO_ICON = new ImageIcon("src/imagenes/poder3.png");
 }

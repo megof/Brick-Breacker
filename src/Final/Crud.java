@@ -1,6 +1,7 @@
 package Final;
 
 import Basededatos.Crear;
+import static brickBreaker.Constantes.LOGO_ICON;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -19,6 +20,7 @@ public class Crud extends JFrame implements ActionListener {
 
     public Crud() {
         super("Registro de usuarios");
+        setIconImage(LOGO_ICON.getImage());
 
         save = new ImageIcon("src/Imagenes/save.PNG");
         Bcrear = new JButton("Crear", save);
